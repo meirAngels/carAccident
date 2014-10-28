@@ -67,7 +67,6 @@ module.exports = function(grunt) {
                     js_frontend: {
                         src: [
                                 './bower_components/jquery/dist/jquery.js',
-                                './bower_components/bootstrap-rtl/dist/js/bootstrap.js',
                                 './bower_components/typeahead.js/dist/typeahead.bundle.js',
 
                                 SRC_BASE + '/main/frontend.main.js'
@@ -98,23 +97,23 @@ module.exports = function(grunt) {
                     }
                 });
 
-    grunt.config('express', {
-                    all: {
-                        options: {
-                            bases: ['./public'],
-                            port: LIVERELOAD_PORT,
-                            hostname: '0.0.0.0',
-                            livereload: true
-                        }
-                    },
-                    stylish: {
-                        options: {
-                            bases: ['./tmp/stylish-portfolio'],
-                            port: 9898,
-                            hostname: '0.0.0.0'
-                        }
-                    }
-                });
+//    grunt.config('express', {
+//                    all: {
+//                        options: {
+//                            bases: ['./public'],
+//                            port: LIVERELOAD_PORT,
+//                            hostname: '0.0.0.0',
+//                            livereload: true
+//                        }
+//                    },
+//                    stylish: {
+//                        options: {
+//                            bases: ['./tmp/stylish-portfolio'],
+//                            port: 9898,
+//                            hostname: '0.0.0.0'
+//                        }
+//                    }
+//                });
 
     grunt.config('watch', {
                     options: {
@@ -140,7 +139,8 @@ module.exports = function(grunt) {
                 });
 
 	// Task definition
-	grunt.registerTask('default', ['build', 'express', 'watch']);
+//	grunt.registerTask('default', ['build', 'express', 'watch']);
+    grunt.registerTask('default', ['build', 'watch']);
     var build_tasks = ['less', 'concat', 'copy'];
     if (grunt.config('compress')) {
         build_tasks.push('uglify');
