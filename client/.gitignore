@@ -1,0 +1,10 @@
+public/
+tmp/
+bower_components/
+node_modules/
+*.swp
+.idea/
+*.iml
+lib
+dist
+npm-debug.log

@@ -1,0 +1,26 @@
+{
+  "name": "gvaot",
+  "version": "0.0.0",
+  "authors": [
+    "Daniel Prinz <danprinz@gmail.com>"
+  ],
+  "description": "donations application for Shiluv-Aher",
+  "main": "index.js",
+  "moduleType": [
+    "node"
+  ],
+  "license": "None",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "font-awesome": "~4.2.0",
+    "bootstrap": "~3.2.0",
+    "typeahead.js": "~0.10.5",
+    "lodash": "~2.4.1"
+  }
+}
