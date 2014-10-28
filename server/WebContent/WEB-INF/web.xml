@@ -9,4 +9,14 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>CarAccidentServlet</display-name>
+    <servlet-name>CarAccidentServlet</servlet-name>
+    <servlet-class>com.sap.carAccident.servlets.CarAccidentServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CarAccidentServlet</servlet-name>
+    <url-pattern>/CarAccidentServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
