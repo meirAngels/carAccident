@@ -57,6 +57,13 @@ module.exports = function(grunt) {
                         dest: DST_BASE + '/assets/img/',
                         flatten: true,
                         expand: true
+                    },
+                    partials_ng: {
+                        cwd: SRC_BASE + '/main/partials/',
+                        src: '*',
+                        dest: DST_BASE + '/partials/',
+                        flatten: true,
+                        expand: true
                     }
 
                 });
@@ -68,8 +75,10 @@ module.exports = function(grunt) {
                         src: [
                                 './bower_components/jquery/dist/jquery.js',
                                 './bower_components/typeahead.js/dist/typeahead.bundle.js',
+                                './bower_components/angularjs/angular.min.js',
+                                './bower_components/angular-route/angular-route.min.js',
 
-                                SRC_BASE + '/main/frontend.main.js'
+                                SRC_BASE + '/main/js/*'
                         ],
                         dest: DST_BASE + '/javascript/frontend.js'
                     }
