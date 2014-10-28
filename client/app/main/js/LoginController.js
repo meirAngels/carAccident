@@ -1,4 +1,5 @@
-reportingControllers.controller('LoginCtr', ['$scope', '$http',
-    function ($scope, $http) {
+reportingControllers.controller('LoginCtrl',
+    function ($scope, backendSrv) {
         //whatever
-    }]);
+    }
+);

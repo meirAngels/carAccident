@@ -1,4 +1,5 @@
-reportingControllers.controller('SelectionCtr', ['$scope', '$http',
-    function ($scope, $http) {
-        //whatever
-    }]);
+reportingControllers.controller('SelectionCtrl',
+    function ($scope, backendSrv) {
+        $scope.greeting = backendSrv.foo();
+    }
+);
