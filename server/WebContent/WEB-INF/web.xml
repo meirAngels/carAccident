@@ -9,14 +9,32 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <servlet-mapping>
+    <servlet-name>PersistenceWithJPAServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  <resource-ref>
+    <res-ref-name>jdbc/DefaultDB</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+  </resource-ref>
   <servlet>
-    <description></description>
-    <display-name>CarAccidentServlet</display-name>
-    <servlet-name>CarAccidentServlet</servlet-name>
-    <servlet-class>com.sap.carAccident.servlets.CarAccidentServlet</servlet-class>
+    <description>PersistenceWithJPAServlet</description>
+    <display-name>PersistenceWithJPAServlet</display-name>
+    <servlet-name>PersistenceWithJPAServlet</servlet-name>
+    <servlet-class>com.sap.cloud.sample.persistence.PersistenceWithJPAServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>CarAccidentServlet</servlet-name>
-    <url-pattern>/CarAccidentServlet</url-pattern>
+    <servlet-name>PersistenceWithJPAServlet</servlet-name>
+    <url-pattern>/PersistenceWithJPAServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description>Service</description>
+    <display-name>CarAccidentService</display-name>
+    <servlet-name>CarAccidentService</servlet-name>
+    <servlet-class>com.sap.caraccident.service.CarAccidentService</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CarAccidentService</servlet-name>
+    <url-pattern>/CarAccidentService</url-pattern>
   </servlet-mapping>
 </web-app>
