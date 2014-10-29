@@ -1,9 +1,7 @@
-reportingApp.service('backendSrv',
-    [
-        function($http) {
-            this.foo = function() {
+reportingApp.service('backendSrv',function($http) {
+
+            this.signIn = function() {
                 return 'boo';
             }
         }
-    ]
 );

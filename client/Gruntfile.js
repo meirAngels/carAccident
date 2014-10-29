@@ -77,6 +77,7 @@ module.exports = function(grunt) {
                                 './bower_components/typeahead.js/dist/typeahead.bundle.js',
                                 './bower_components/angularjs/angular.min.js',
                                 './bower_components/angular-route/angular-route.min.js',
+                                './bower_components/q/q.js',
 
                                 SRC_BASE + '/main/js/*'
                         ],
