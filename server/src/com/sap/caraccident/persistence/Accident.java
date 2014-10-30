@@ -1,4 +1,4 @@
-package com.sap.caraccident.persistence;
+package com.sap.carAccident.persistence;
 
 import java.io.Serializable;
 import java.lang.Byte;
