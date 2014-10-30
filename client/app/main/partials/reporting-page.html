@@ -1,0 +1,86 @@
+<div class="container" ng-controller="ReportingCtrl">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-sm">
+                <form class="form-horizontal" method="post">
+                    <fieldset>
+                        <h2 class="text-center header">Report Your Accident!</h2>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="well well-sm">
+                <form class="form-horizontal" method="post">
+                    <fieldset>
+                        <legend class="text-center header">Driver Details</legend>
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-1">
+                                <input id="fname" name="name" type="text" placeholder="First Name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-1">
+                                <input id="lname" name="name" type="text" placeholder="Last Name" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-1">
+                                <input id="email" name="email" type="text" placeholder="Email Address" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-1">
+                                <input id="phone" name="phone" type="text" placeholder="Phone" class="form-control">
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="well well-sm">
+                <form class="form-horizontal" method="post">
+                    <fieldset>
+                        <legend class="text-center header">Injuries</legend>
+                        <div class="form-group">
+                            <div class="col-md-12 col-md-offset-1 inner_text text-center">
+                                Did anyone got injured?
+                                <!--input class="switch-button" type="checkbox" checked data-on-color="success" data-off-color="danger" ng-model="injuried"-->
+                                <input type="checkbox" ng-model="injuried" bootstrap-switch checked data-on-color="danger" data-off-color="success" on-text="YES" off-text="NO">
+                                <br/><br/>
+                                <p class="{{{true:'fade in' , false : 'fade'}[injuried]}}">Call <a type="button" class="btn btn-danger" href="tel:+100">100</a> For Police</p>
+                                <p class="{{{true:'fade in' , false : 'fade'}[injuried]}}">Call <a type="button" class="btn btn-danger" href="tel:+101">101</a> For An Ambulans</p>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div>
+                <div class="panel panel-default">
+                    <div class="text-center header">Your Location</div>
+                    <div gmapsframe class="gmapsframe panel-body text-center"/>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="well well-sm">
+                <form class="form-horizontal" method="post">
+                    <fieldset>
+                        <div class="form-group">
+                            <div class="col-md-12 text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">Report</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

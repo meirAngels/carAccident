@@ -73,11 +73,13 @@ module.exports = function(grunt) {
                     },
                     js_frontend: {
                         src: [
-                                './bower_components/jquery/dist/jquery.js',
+//                                './bower_components/jquery/dist/jquery.js',
+                                './bower_components/jquery/jquery.js',
                                 './bower_components/typeahead.js/dist/typeahead.bundle.js',
                                 './bower_components/angularjs/angular.min.js',
                                 './bower_components/angular-route/angular-route.min.js',
                                 './bower_components/q/q.js',
+                                './bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js',
 
                                 SRC_BASE + '/main/js/*'
                         ],
@@ -90,7 +92,7 @@ module.exports = function(grunt) {
                             compress: grunt.config('compress')
                         },
                         files: {
-                            './public/styles/frontend.css': ['./app/main/frontend.main.less'],
+                            './public/styles/frontend.css': ['./app/main/frontend.main.less','./bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css'],
                             './public/assets/fonts/font-awesome.css': ['./bower_components/font-awesome/less/font-awesome.less']
                         }
                     }
