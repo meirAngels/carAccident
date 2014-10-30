@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><entities>
 	<entity>
-		<entity-name>com.sap.cloud.sample.persistence.User</entity-name>
+		<entity-name>com.sap.carAccident.persistence.EmergencyNumbers</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>188</entity-height>
-		<entity-X-Coordinate>129</entity-X-Coordinate>
-		<entity-Y-Coordinate>225</entity-Y-Coordinate>
+		<entity-height>108</entity-height>
+		<entity-X-Coordinate>150</entity-X-Coordinate>
+		<entity-Y-Coordinate>252</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>

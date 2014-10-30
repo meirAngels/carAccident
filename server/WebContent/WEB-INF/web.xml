@@ -9,7 +9,6 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-
   <servlet>
     <description></description>
     <display-name>AccidentServlet</display-name>
@@ -20,8 +19,18 @@
     <servlet-name>AccidentServlet</servlet-name>
     <url-pattern>/AccidentServlet</url-pattern>
   </servlet-mapping>
-     <resource-ref>
+  <resource-ref>
     <res-ref-name>jdbc/DefaultDB</res-ref-name>
     <res-type>javax.sql.DataSource</res-type>
   </resource-ref>
+  <servlet>
+    <description></description>
+    <display-name>EmergencyNumbersServlet</display-name>
+    <servlet-name>EmergencyNumbersServlet</servlet-name>
+    <servlet-class>com.sap.carAccident.servlets.EmergencyNumbersServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EmergencyNumbersServlet</servlet-name>
+    <url-pattern>/EmergencyNumbersServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

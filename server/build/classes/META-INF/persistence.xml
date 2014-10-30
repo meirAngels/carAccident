@@ -4,6 +4,7 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class>com.sap.carAccident.persistence.Accident</class>
 		<class>com.sap.carAccident.persistence.ThirdParty</class>
+		<class>com.sap.carAccident.persistence.EmergencyNumbers</class>
 		<properties>
 			<property name="eclipselink.ddl-generation" value="create-tables"/>
 		</properties>
