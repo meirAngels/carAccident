@@ -9,22 +9,30 @@
 
 
 <div class="container">
-    <div class="header">
-        <h3 class="text-muted">Total Loss</h3>
-    </div>
+    <div class="row">
+
+        <div class="col-xs-9 col-sm-9 col-md-12 col-lg-12">
+
+            <div class="header">
+                <h3 class="text-muted">Total Loss</h3>
+            </div>
 
 
-    <div style="position: relative; margin-top: 70px" ng-controller="LoginCtrl">
-        <form class="form-signin" role="form" style="margin-right: auto;margin-left: auto">
-            <input type="text" class="form-control" placeholder="Username"  ng-model="username" autofocus>
-            <input type="password" class="form-control" placeholder="Password"  ng-model="password" style="margin-top: 15px">
+            <div style="position: relative; margin-top: 70px" ng-controller="LoginCtrl">
+                <form class="form-signin" role="form" style="margin-right: auto;margin-left: auto">
+                    <input type="text" class="form-control" placeholder="Username"  ng-model="username" autofocus>
+                    <input type="password" class="form-control" placeholder="Password"  ng-model="password" style="margin-top: 15px">
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="signIn()">Sign in</button>
-            <br>
-            <p style="float: right">
-                Not a member? <a href="#" >Join now</a>
-            </p>
-        </form>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="signIn()">Sign in</button>
+                    <br>
+                    <p style="float: right">
+                        Not a member? <a href="#" >Join now</a>
+                    </p>
+                </form>
+            </div>
+
+        </div>
+
     </div>
 </div>
 
