@@ -17,10 +17,10 @@ reportingApp.config(['$routeProvider',
             when('/handleClaims', {
                 templateUrl: 'partials/claims-page.html',
                 controller: 'ClaimsCtrl'
-            })/*.
+            }).
             otherwise({
                 redirectTo: '/'
-            });*/
+            });
     }]);
 
 var reportingControllers = angular.module('reportingControllers', []);
