@@ -5,9 +5,23 @@
     <title></title>
 </head>
 <body>
-SELECTIONS
-<div ng-controller="SelectionCtrl">
-    {{ greeting }}
+
+<div ng-controller="SelectionCtrl" style="text-align: center;margin-top: 40px">
+
+    <div ng-show="showReportAccident">
+        <button type="button" class="btn btn-primary selectionButtons" ng-click="reportAccident()">Report an accident</button>
+    </div>
+
+    <div style="margin-top: 20px" ng-show="showHandleOpenClaims">
+        <button type="button" class="btn btn-success selectionButtons" ng-click="handleOpenClaims()">Handle open claims</button>
+    </div>
+
+    <div  style="margin-top: 20px" ng-show="showFollowUpOnCaseProgress">
+        <button type="button" class="btn btn-info selectionButtons" ng-click="followUpOnCaseProgress()">Follow up on case progress</button>
+    </div>
+
+    <img src="assets/img/accident.jpg" style="display: inline-block">
+
 </div>
 </body>
 </html>

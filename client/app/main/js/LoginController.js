@@ -1,6 +1,8 @@
 reportingControllers.controller('LoginCtrl',
     function ($scope, $location, backendSrv) {
 
+
+
         $scope.username;
         $scope.password;
 

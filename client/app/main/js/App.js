@@ -14,9 +14,13 @@ reportingApp.config(['$routeProvider',
                 templateUrl: 'partials/selection-page.html',
                 controller: 'SelectionCtrl'
             }).
+            when('/handleClaims', {
+                templateUrl: 'partials/claims-page.html',
+                controller: 'ClaimsCtrl'
+            })/*.
             otherwise({
                 redirectTo: '/'
-            });
+            });*/
     }]);
 
 var reportingControllers = angular.module('reportingControllers', []);
