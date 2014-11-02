@@ -1,14 +1,11 @@
 package com.sap.carAccident.servlets;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.Date;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.naming.InitialContext;
@@ -26,12 +23,13 @@ import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.sap.carAccident.persistence.Accident;
-import com.sap.security.core.server.csi.IXSSEncoder;
-import com.sap.security.core.server.csi.XSSEncoder;
+import com.sap.carAccident.persistence.ThirdParty;
 
 
 
@@ -39,17 +37,29 @@ import com.sap.security.core.server.csi.XSSEncoder;
  * Servlet implementation class AccidentServlet
  */
 public class AccidentServlet extends HttpServlet {
+	private static final String ACCIDENT_ID = "accidentId";
+	private static final String DATE = "date";
+	private static final String DESCRIPTION = "description";
+	private static final String GEOLOCATION = "geolocation";
+	private static final String TOWINGNEEDED = "towingneeded";
+	private static final String CARREPLACEMENTNEEDED = "carreplacementneeded";
+	private static final String INJURIES = "injuries";
+	private static final String PHONENUMBER = "phonenumber";
+	private static final String INSURANCEPOLICYNUMBER = "insurancepolicynumber";
+	private static final String PLATENUMBER = "platenumber";
+	private static final String NAME = "name";
 	private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = LoggerFactory.getLogger(AccidentServlet.class);
+
        
     private DataSource ds;
     private EntityManagerFactory emf;
+	
    
     /** {@inheritDoc} */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void init() throws ServletException {
-        Connection connection = null;
         try {
             InitialContext ctx = new InitialContext();
             ds = (DataSource) ctx.lookup("java:comp/env/jdbc/DefaultDB");
@@ -81,8 +91,15 @@ public class AccidentServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
         try {
-        	System.out.println("2");
-        	getFromAccidentTable(response);
+        	String accidentId = request.getParameter("accidentId");
+        	if(accidentId != "Undefined" && accidentId != null && !accidentId.isEmpty()){
+        		
+        		getAccident(response, Integer.parseInt(accidentId));	
+        	}
+        	else{
+        		getAllAccidents(response);
+        	}
+        	
         } catch (Exception e) {
             response.getWriter().println("Persistence operation failed with reason: " + e.getMessage());
             LOGGER.error("Persistence operation failed", e);
@@ -95,68 +112,156 @@ public class AccidentServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    String s = "{accident:{\"accidentId\":\"123456\", \"userId\":\"23455\", \"date\":\"October 10, 2014\", \"description\":\"Meir crashed the bus in Nepal\", \"geolocation\":\"26.5333 N, 86.7333 E\", \"damage\":[{ \"image1\" : \"/images/car1.gif\"},{ \"image1\" : \"/images/car2.gif\"},{ \"image1\" : \"/images/car3.gif\"}],\"thirdparty\":[{\"thirdpartyid\" : \"1234\", \"name\" : \"john\" , \"phonenumber\" : \"054-1234567\" , \"insurancepolicynumber\" : \"1234\" , \"platenumber\" : \"123-45-4554\"}]}}";
-	    JsonObject json = (JsonObject)new JsonParser().parse(s);
+    //Read JSon from request
+    StringBuilder sb = new StringBuilder();
+    BufferedReader reader = request.getReader();
+    try {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append('\n');
+        }
+    } finally {
+        reader.close();
+    }
+		EntityManager em = emf.createEntityManager();
+	    JsonObject json = (JsonObject)new JsonParser().parse(sb.toString());
 
 	    JsonObject jsonAccidentObject = json.getAsJsonObject("accident");
-	    JsonPrimitive accidentIdPrimitive = jsonAccidentObject.getAsJsonPrimitive("accidentId");
-	    JsonPrimitive descriptionPrimitive = jsonAccidentObject.getAsJsonPrimitive("description");
+	    JsonPrimitive accidentIdJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("accidentId");
+	    JsonPrimitive dateJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("date");
+	    JsonPrimitive descriptionJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("description");
+	    JsonPrimitive geolocationJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("geolocation");
+	    JsonPrimitive towingneededJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("towingneeded");
+	    JsonPrimitive carreplacementneededJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("carreplacementneeded");
+	    JsonPrimitive injuriesJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("injuries");
+	    
 	    Accident carAccident =  new Accident();
+	    
 	    //get accident values from jsonPrimitivs
-	    int accidentId = accidentIdPrimitive.getAsInt();
-	    String description = descriptionPrimitive.getAsString();
-	   
-	  /*  String accidentDate = jsonPrimitive.getAsString();
-	    Date date = null;
-		try {
-			date = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(accidentDate);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+	    int accidentId = accidentIdJsonPrimitive.getAsInt();
+	    String date = dateJsonPrimitive.getAsString();
+	    java.sql.Date sqlFormatDate = java.sql.Date.valueOf(date);
+	    String description = descriptionJsonPrimitive.getAsString();
+	    String geolocation = geolocationJsonPrimitive.getAsString();
+	    boolean isTowingneeded = towingneededJsonPrimitive.getAsBoolean();
+	    boolean isCarreplacementneeded = carreplacementneededJsonPrimitive.getAsBoolean();
+	    boolean isInjuries = injuriesJsonPrimitive.getAsBoolean();
+	    
+	    JsonArray thirdpartyJsonArray = jsonAccidentObject.getAsJsonArray("thirdparty");
+	    ThirdParty thirdParty = null;
+	    for(JsonElement thirdpartyElement : thirdpartyJsonArray)
+	    {
+	    	thirdParty =  new ThirdParty();
+	    	JsonPrimitive nameJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("name");
+	    	JsonPrimitive phonenumberJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("phonenumber");
+	    	JsonPrimitive insurancepolicynumberJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("insurancepolicynumber");
+	    	JsonPrimitive platenumberJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("platenumber");
+	    	
+	    	//get thirdPartyId values from jsonPrimitivs
+	    	String name = nameJsonPrimitive.getAsString();
+	    	String phoneNumber = phonenumberJsonPrimitive.getAsString();
+	    	int insurancePolicyNumber = insurancepolicynumberJsonPrimitive.getAsInt();
+	    	String plateNumber = platenumberJsonPrimitive.getAsString();
+	    	
+	    	
+	    	
+	    	thirdParty.setName(name);
+	    	thirdParty.setAccidentId(accidentId);
+	    	thirdParty.setThirdPartyId(System.currentTimeMillis());
+	    	thirdParty.setPhoneNumber(phoneNumber);
+	    	thirdParty.setInsurancePolicyNumber(insurancePolicyNumber);
+	    	thirdParty.setPlateNumber(plateNumber);
+	    	
+	    	 // Save thirdParty in DB
+		    em.getTransaction().begin();
+	    	em.persist(thirdParty);
+	        em.getTransaction().commit();
+	    }
 	    
 	   
-	    
 	    //set all properties to Accident instance
 	    carAccident.setAccidentId(accidentId);
+	    carAccident.setDate(sqlFormatDate);
 	    carAccident.setDescription(description);
-	    //carAccident.setDate(date);
+	    carAccident.setGeolocation(geolocation);
+	    carAccident.setTowingNeeded(isTowingneeded);
+	    carAccident.setCarreplacementNeeded(isCarreplacementneeded);
+	    carAccident.setInjuries(isInjuries);
+	    
+	   
 	    
 	    // Save accident in DB
-	    EntityManager em = emf.createEntityManager();
 	    em.getTransaction().begin();
         em.persist(carAccident);
         em.getTransaction().commit();
 	    
 	}
 	
-	private void getFromAccidentTable(HttpServletResponse response) throws SQLException, IOException {
-        // Append table that lists all users
-        EntityManager em = emf.createEntityManager();
-        try 
+	private void getAllAccidents(HttpServletResponse response) throws SQLException, IOException {
+		EntityManager em = emf.createEntityManager();
+		try 
         {
-            @SuppressWarnings("unchecked")
-            List<Accident> resultList = em.createNamedQuery("GetAllAccidents").getResultList();
-            response.getWriter().println(
-                    "<p><table border=\"1\"><tr><th colspan=\"3\">"
-                            + (resultList.isEmpty() ? "" : resultList.size() + " ")
-                            + "Accidents in the Database</th></tr>");
-            if (resultList.isEmpty()) {
-                response.getWriter().println("<tr><td colspan=\"3\">Database is empty</td></tr>");
-            } 
+			@SuppressWarnings("unchecked")
+			List<Accident> accidentResultList = em.createNamedQuery("GetAllAccidents").getResultList();
+			JsonObject accidentsJSon = new JsonObject();
+            JsonArray accidentsArray = new JsonArray();
+            accidentsJSon.add("accidents", accidentsArray);
             
-            IXSSEncoder xssEncoder = XSSEncoder.getInstance();
-            for (Accident acc : resultList) {
-                response.getWriter().println(
-                        "<tr><td>" + xssEncoder.encodeHTML(acc.getUserName()) + "</td><td>"
-                                + xssEncoder.encodeHTML(acc.getDescription()) + "</td><td>" + acc.getAccidentId() + "</td></tr>");
+            for (Accident accident : accidentResultList) {
+                // create JSon
+                JsonObject accidentJSon = new JsonObject();
+                accidentJSon.addProperty(ACCIDENT_ID, accident.getAccidentId());
+                accidentJSon.addProperty(DATE, accident.getDate().toString());
+                accidentJSon.addProperty(DESCRIPTION, accident.getDescription());
+                accidentJSon.addProperty(GEOLOCATION, accident.getGeolocation());     
+                accidentJSon.addProperty(TOWINGNEEDED, accident.getTowingNeeded());
+                accidentJSon.addProperty(CARREPLACEMENTNEEDED,accident.getCarreplacementNeeded());
+                accidentJSon.addProperty(INJURIES, accident.getInjuries());
+                accidentsArray.add(accidentJSon);
+                
+                @SuppressWarnings("unchecked")
+				List<ThirdParty> thirdpartyResultList = em.createNamedQuery("GetThirdPartiesForAccident").setParameter("accidentThirdPartyId", 1231).getResultList();
+                JsonArray thirdpartyArray = new JsonArray();
+                accidentJSon.add("thirdparty", thirdpartyArray);
+                for (ThirdParty thirdparty : thirdpartyResultList) {
+	                //Create thirdParty json objects inside accident object
+	                JsonObject thirdpartyJSon = new JsonObject();
+	                thirdpartyJSon.addProperty(NAME, thirdparty.getName());
+	                thirdpartyJSon.addProperty(PHONENUMBER, thirdparty.getPhoneNumber());
+	                thirdpartyJSon.addProperty(INSURANCEPOLICYNUMBER, thirdparty.getInsurancePolicyNumber());
+	                thirdpartyJSon.addProperty(PLATENUMBER, thirdparty.getPlateNumber());
+	                //Add thirdpartyJSonObject with  it's properties to the thirdParty array
+	                thirdpartyArray.add(thirdpartyJSon);
+                }
             }
-            response.getWriter().println("</table></p>");
-        } 
-        finally {
+            response.getWriter().println(accidentsJSon.toString());
+           
+        }
+		finally {
             em.close();
         }
-    }	
-
-
+    }
+	private void getAccident(HttpServletResponse response, int accidentId) throws SQLException, IOException {
+		EntityManager em = emf.createEntityManager();
+		try 
+        {
+			Accident accident = (Accident) em.createNamedQuery("GetAccidentById").setParameter("accidentId", accidentId).getSingleResult();
+			JsonObject accidentOuterJSon = new JsonObject();
+			JsonObject accidentJSon = new JsonObject();
+			accidentOuterJSon.add("accident", accidentJSon);
+             accidentJSon.addProperty(ACCIDENT_ID, accident.getAccidentId());
+             accidentJSon.addProperty(DATE, accident.getDate().toString());
+             accidentJSon.addProperty(DESCRIPTION, accident.getDescription());
+             accidentJSon.addProperty(GEOLOCATION, accident.getGeolocation());     
+             accidentJSon.addProperty(TOWINGNEEDED, accident.getTowingNeeded());
+             accidentJSon.addProperty(CARREPLACEMENTNEEDED,accident.getCarreplacementNeeded());
+             accidentJSon.addProperty(INJURIES, accident.getInjuries());
+             System.out.println(accidentOuterJSon.toString());
+             response.getWriter().println(accidentOuterJSon.toString());
+        }
+		finally {
+            em.close();
+        }
+		
+	}
 }
