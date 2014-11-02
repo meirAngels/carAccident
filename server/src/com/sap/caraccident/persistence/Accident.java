@@ -5,6 +5,7 @@ import java.lang.Byte;
 import java.lang.Integer;
 import java.lang.String;
 import java.sql.Date;
+
 import javax.persistence.*;
 
 /**
@@ -13,17 +14,16 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="T_ACCIDENT")
-@NamedQueries({ 
-	@NamedQuery(name = "GetAllAccidents", query = "Select a from Accident a"), 
 
-	@NamedQuery(name = "GetAccidentById", query = "Select a from Accident a Where a.accidentId = :accidentId")
-})
+@NamedQueries({ @NamedQuery(name = "GetAllAccidents", query = "Select a from Accident a"), 
+			    @NamedQuery(name = "GetAccidentById", query = "Select a from Accident a Where a.accidentId = :accidentId")})
+
 public class Accident implements Serializable {
 
 	@Id
 	private Integer accidentId;
 	
-	private String userName;   
+	private String userName;
 	private Date date;
 	private String description;
 	private String geolocation;
