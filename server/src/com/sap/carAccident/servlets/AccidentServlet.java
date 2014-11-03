@@ -2,6 +2,7 @@ package com.sap.carAccident.servlets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,9 @@ public class AccidentServlet extends HttpServlet {
 	private static final String DESCRIPTION = "description";
 	private static final String GEOLOCATION = "geolocation";
 	private static final String TOWINGNEEDED = "towingneeded";
+	private static final String TOWINGETA = "towingETA";
 	private static final String CARREPLACEMENTNEEDED = "carreplacementneeded";
+	private static final String CARREPLACEMENTETA = "carReplacementETA";
 	private static final String INJURIES = "injuries";
 	private static final String PHONENUMBER = "phonenumber";
 	private static final String INSURANCEPOLICYNUMBER = "insurancepolicynumber";
@@ -131,7 +134,7 @@ public class AccidentServlet extends HttpServlet {
 		String header = request.getHeader("OPERATION");
 		if (header != null && !header.equals(Operation.CREATE.toString()))
 		{
-			perfromUpdate(request, response);
+			perfromUpdate(request, response, json);
 			return;
 		}
 
@@ -224,6 +227,25 @@ public class AccidentServlet extends HttpServlet {
                 accidentJSon.addProperty(DESCRIPTION, accident.getDescription());
                 accidentJSon.addProperty(GEOLOCATION, accident.getGeolocation());     
                 accidentJSon.addProperty(TOWINGNEEDED, accident.getTowingNeeded());
+                
+                Date towingETA = accident.getTowingETA();
+                String towingETAStr = "";
+                if (towingETA != null)
+                {
+                	towingETAStr = towingETA.toString();
+                }
+                             
+                accidentJSon.addProperty(TOWINGETA, towingETAStr);
+                Date carReplacementETA = accident.getCarReplacementETA();
+                String carReplacementETAStr = "";
+                if (carReplacementETA != null)
+                {
+                	carReplacementETAStr = carReplacementETA.toString();
+                }
+
+                
+
+                accidentJSon.addProperty(CARREPLACEMENTETA, carReplacementETAStr);
                 accidentJSon.addProperty(CARREPLACEMENTNEEDED,accident.getCarreplacementNeeded());
                 accidentJSon.addProperty(INJURIES, accident.getInjuries());
                 accidentsArray.add(accidentJSon);
@@ -278,10 +300,10 @@ public class AccidentServlet extends HttpServlet {
 		
 	}
 	
-	private void perfromUpdate(HttpServletRequest request, HttpServletResponse response) throws IllegalArgumentException, IOException 
+	private void perfromUpdate(HttpServletRequest request, HttpServletResponse response, JsonObject requestJson) throws IllegalArgumentException, IOException 
 	{
 		//Read JSon from request
-	    StringBuilder sb = new StringBuilder();
+	   /* StringBuilder sb = new StringBuilder();
 	    BufferedReader reader = request.getReader();
 	    try {
 	        String line;
@@ -293,7 +315,9 @@ public class AccidentServlet extends HttpServlet {
 	    }
 	    
 	    
-	    JsonObject requestJson = (JsonObject)new JsonParser().parse(sb.toString());
+	    
+	    
+	    JsonObject requestJson = (JsonObject)new JsonParser().parse(sb.toString());*/
 	    
 	  //get Accident
 	    java.sql.Date sqlFormatDate;
