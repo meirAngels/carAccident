@@ -48,7 +48,7 @@ public class EmergencyNumbersServlet extends HttpServlet {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void init() throws ServletException {
-        Connection connection = null;
+        //Connection connection = null;
         try {
             InitialContext ctx = new InitialContext();
             ds = (DataSource) ctx.lookup("java:comp/env/jdbc/DefaultDB");

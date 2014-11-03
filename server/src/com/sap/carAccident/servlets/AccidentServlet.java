@@ -33,9 +33,6 @@ import com.sap.carAccident.persistence.ClaimStatus;
 import com.sap.carAccident.persistence.ThirdParty;
 
 
-
-
-
 /**
  * Servlet implementation class AccidentServlet
  */
@@ -52,6 +49,8 @@ public class AccidentServlet extends HttpServlet {
 	private static final String PHONENUMBER = "phonenumber";
 	private static final String INSURANCEPOLICYNUMBER = "insurancepolicynumber";
 	private static final String PLATENUMBER = "platenumber";
+	private static final String CLAIMSTATUS = "claimStatus"; 
+	private static final String CLAIMSENTTOINSURANCE = "claimSentToInsurance"; 
 	private static final String NAME = "name";
 	private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = LoggerFactory.getLogger(AccidentServlet.class);
@@ -121,13 +120,15 @@ public class AccidentServlet extends HttpServlet {
     StringBuilder sb = new StringBuilder();
     BufferedReader reader = request.getReader();
     try {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line).append('\n');
-        }
-    } finally {
-        reader.close();
-    }
+        	String line;
+        	while ((line = reader.readLine()) != null) {
+        		sb.append(line).append('\n');
+        	}
+    	} 
+    finally{
+    		reader.close();
+    	}
+    
 		EntityManager em = emf.createEntityManager();
 	    JsonObject json = (JsonObject)new JsonParser().parse(sb.toString());
 
@@ -137,75 +138,124 @@ public class AccidentServlet extends HttpServlet {
 			perfromUpdate(request, response, json);
 			return;
 		}
-
-
+		
+		//set all properties to Accident instance	    
+	    Accident carAccident =  new Accident();	   				
 	    JsonObject jsonAccidentObject = json.getAsJsonObject("accident");
+	    
+	    int accidentId = 0;
 	    JsonPrimitive accidentIdJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("accidentId");
+	    if (accidentIdJsonPrimitive != null){
+	    	accidentId = accidentIdJsonPrimitive.getAsInt();
+	    	carAccident.setAccidentId(accidentId);
+	    }	    
+	    
 	    JsonPrimitive dateJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("date");
-	    JsonPrimitive descriptionJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("description");
-	    JsonPrimitive geolocationJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("geolocation");
-	    JsonPrimitive towingneededJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("towingneeded");
-	    JsonPrimitive carreplacementneededJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("carreplacementneeded");
-	    JsonPrimitive injuriesJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("injuries");
-	    
-	    Accident carAccident =  new Accident();
-	    
-	    //get accident values from jsonPrimitivs
-	    int accidentId = accidentIdJsonPrimitive.getAsInt();
-	    String date = dateJsonPrimitive.getAsString();
-	    java.sql.Date sqlFormatDate = java.sql.Date.valueOf(date);
-	    String description = descriptionJsonPrimitive.getAsString();
-	    String geolocation = geolocationJsonPrimitive.getAsString();
-	    boolean isTowingneeded = towingneededJsonPrimitive.getAsBoolean();
-	    boolean isCarreplacementneeded = carreplacementneededJsonPrimitive.getAsBoolean();
-	    boolean isInjuries = injuriesJsonPrimitive.getAsBoolean();
-	    
-	    JsonArray thirdpartyJsonArray = jsonAccidentObject.getAsJsonArray("thirdparty");
-	    ThirdParty thirdParty = null;
-	    for(JsonElement thirdpartyElement : thirdpartyJsonArray)
-	    {
-	    	thirdParty =  new ThirdParty();
-	    	JsonPrimitive nameJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("name");
-	    	JsonPrimitive phonenumberJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("phonenumber");
-	    	JsonPrimitive insurancepolicynumberJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("insurancepolicynumber");
-	    	JsonPrimitive platenumberJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("platenumber");
-	    	
-	    	//get thirdPartyId values from jsonPrimitivs
-	    	String name = nameJsonPrimitive.getAsString();
-	    	String phoneNumber = phonenumberJsonPrimitive.getAsString();
-	    	int insurancePolicyNumber = insurancepolicynumberJsonPrimitive.getAsInt();
-	    	String plateNumber = platenumberJsonPrimitive.getAsString();
-
-	    	thirdParty.setName(name);
-	    	thirdParty.setAccidentId(accidentId);
-	    	thirdParty.setThirdPartyId(System.currentTimeMillis());
-	    	thirdParty.setPhoneNumber(phoneNumber);
-	    	thirdParty.setInsurancePolicyNumber(insurancePolicyNumber);
-	    	thirdParty.setPlateNumber(plateNumber);
-	    	
-	    	 // Save thirdParty in DB
-		    em.getTransaction().begin();
-	    	em.persist(thirdParty);
-	        em.getTransaction().commit();
+	    if (dateJsonPrimitive != null){
+	    	String date = dateJsonPrimitive.getAsString();
+	    	java.sql.Date sqlFormatDate = java.sql.Date.valueOf(date);
+	    	 carAccident.setDate(sqlFormatDate);
 	    }
 	    
-	   
-	    //set all properties to Accident instance
-	    carAccident.setAccidentId(accidentId);
-	    carAccident.setDate(sqlFormatDate);
-	    carAccident.setDescription(description);
-	    carAccident.setGeolocation(geolocation);
-	    carAccident.setTowingNeeded(isTowingneeded);
-	    carAccident.setCarreplacementNeeded(isCarreplacementneeded);
-	    carAccident.setInjuries(isInjuries);
+	    JsonPrimitive descriptionJsonPrimitive 	= jsonAccidentObject.getAsJsonPrimitive("description");
+	    if (descriptionJsonPrimitive != null){
+	    	String description = descriptionJsonPrimitive.getAsString();
+		    carAccident.setDescription(description);   		    	
+	    }
 	    
+	    JsonPrimitive geolocationJsonPrimitive 	= jsonAccidentObject.getAsJsonPrimitive("geolocation");
+	    if( geolocationJsonPrimitive != null){
+	    	String geolocation = geolocationJsonPrimitive.getAsString();
+		    carAccident.setGeolocation(geolocation); 
+	    }
+	    
+	    JsonPrimitive towingneededJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("towingneeded");
+	    if (towingneededJsonPrimitive != null){
+	    	boolean isTowingneeded = towingneededJsonPrimitive.getAsBoolean();
+		    carAccident.setTowingNeeded(isTowingneeded);
+	    }
+	    
+	    JsonPrimitive towingnETAJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("towingETA");
+	    if (towingnETAJsonPrimitive != null){
+	    	String towingETA = towingnETAJsonPrimitive.getAsString();
+	    	java.sql.Date sqlFormatDate = java.sql.Date.valueOf(towingETA);
+		    carAccident.setTowingETA(sqlFormatDate);
+	    }
+	    
+	    JsonPrimitive carreplacementneededJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("carreplacementneeded");
+	    if (carreplacementneededJsonPrimitive != null){
+	    	 boolean isCarreplacementneeded = carreplacementneededJsonPrimitive.getAsBoolean();
+	    	 carAccident.setCarreplacementNeeded(isCarreplacementneeded);
+	    }	     
+	    	    
+	    JsonPrimitive carReplacementETAJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("carReplacementETA");
+	    if (carReplacementETAJsonPrimitive != null){
+	    	String carReplacementETA = carReplacementETAJsonPrimitive.getAsString();
+	    	java.sql.Date sqlFormatDate = java.sql.Date.valueOf(carReplacementETA);
+		    carAccident.setCarReplacementETA(sqlFormatDate);
+	    }	    
+	    
+	    JsonPrimitive injuriesJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("injuries");
+	    if (injuriesJsonPrimitive != null){
+		    boolean isInjuries = injuriesJsonPrimitive.getAsBoolean();
+		    carAccident.setInjuries(isInjuries);		    
+	    }	    
+	    
+	    JsonPrimitive claimSentToInsuranceJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("claimSentToInsurance");
+	    if (claimSentToInsuranceJsonPrimitive != null){
+	    	 boolean claimSentToInsurance = claimSentToInsuranceJsonPrimitive.getAsBoolean();
+	    	 carAccident.setCarreplacementNeeded(claimSentToInsurance);
+	    }
+	    
+	    JsonPrimitive claimStatusPrimitive = jsonAccidentObject.getAsJsonPrimitive("claimStatus");
+	    if (claimStatusPrimitive != null){
+	    	String claimStatus = claimStatusPrimitive.getAsString();
+	    	carAccident.setClaimStatus(ClaimStatus.valueOf(claimStatus));	    
+	    }	    	  
+	    else{
+	    	carAccident.setClaimStatus(ClaimStatus.OPEN);
+	    }
+	    	    
+	    JsonArray thirdpartyJsonArray = jsonAccidentObject.getAsJsonArray("thirdparty");
+	    
+	    //Set third Party
+	    for(JsonElement thirdpartyElement : thirdpartyJsonArray)
+	    {	
+	    	setThirdPartyElement(em, accidentId, thirdpartyElement);
+	    }	    	   	    	    
 	   
 	    
 	    // Save accident in DB
 	    em.getTransaction().begin();
         em.persist(carAccident);
-        em.getTransaction().commit();
-	    
+        em.getTransaction().commit();	    
+	}
+
+	private void setThirdPartyElement(EntityManager em, int accidentId,	JsonElement thirdpartyElement) {
+				
+		ThirdParty  thirdParty =  new ThirdParty();
+		JsonPrimitive nameJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("name");
+		JsonPrimitive phonenumberJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("phonenumber");
+		JsonPrimitive insurancepolicynumberJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("insurancepolicynumber");
+		JsonPrimitive platenumberJsonPrimitive = thirdpartyElement.getAsJsonObject().getAsJsonPrimitive("platenumber");
+		
+		//get thirdPartyId values from jsonPrimitivs
+		String name = nameJsonPrimitive.getAsString();
+		String phoneNumber = phonenumberJsonPrimitive.getAsString();
+		int insurancePolicyNumber = insurancepolicynumberJsonPrimitive.getAsInt();
+		String plateNumber = platenumberJsonPrimitive.getAsString();
+
+		thirdParty.setName(name);
+		thirdParty.setAccidentId(accidentId);
+		thirdParty.setThirdPartyId(System.currentTimeMillis());
+		thirdParty.setPhoneNumber(phoneNumber);
+		thirdParty.setInsurancePolicyNumber(insurancePolicyNumber);
+		thirdParty.setPlateNumber(plateNumber);
+		
+		 // Save thirdParty in DB
+		em.getTransaction().begin();
+		em.persist(thirdParty);
+		em.getTransaction().commit();
 	}
 	
 
@@ -222,11 +272,13 @@ public class AccidentServlet extends HttpServlet {
             for (Accident accident : accidentResultList) {
                 // create JSon
                 JsonObject accidentJSon = new JsonObject();
-                accidentJSon.addProperty(ACCIDENT_ID, accident.getAccidentId());
-                accidentJSon.addProperty(DATE, accident.getDate().toString());
-                accidentJSon.addProperty(DESCRIPTION, accident.getDescription());
-                accidentJSon.addProperty(GEOLOCATION, accident.getGeolocation());     
+                accidentJSon.addProperty(ACCIDENT_ID,  accident.getAccidentId());
+                accidentJSon.addProperty(DATE, 		   accident.getDate().toString());
+                accidentJSon.addProperty(DESCRIPTION,  accident.getDescription());
+                accidentJSon.addProperty(GEOLOCATION,  accident.getGeolocation());     
                 accidentJSon.addProperty(TOWINGNEEDED, accident.getTowingNeeded());
+                accidentJSon.addProperty(CLAIMSTATUS,  accident.getClaimStatus());
+                accidentJSon.addProperty(CLAIMSENTTOINSURANCE,  accident.getClaimSentToInsurance());
                 
                 Date towingETA = accident.getTowingETA();
                 String towingETAStr = "";
@@ -291,6 +343,8 @@ public class AccidentServlet extends HttpServlet {
              accidentJSon.addProperty(TOWINGNEEDED, accident.getTowingNeeded());
              accidentJSon.addProperty(CARREPLACEMENTNEEDED,accident.getCarreplacementNeeded());
              accidentJSon.addProperty(INJURIES, accident.getInjuries());
+             accidentJSon.addProperty(CLAIMSTATUS,  accident.getClaimStatus());
+             accidentJSon.addProperty(CLAIMSENTTOINSURANCE,  accident.getClaimSentToInsurance());
              System.out.println(accidentOuterJSon.toString());
              response.getWriter().println(accidentOuterJSon.toString());
         }
@@ -302,22 +356,6 @@ public class AccidentServlet extends HttpServlet {
 	
 	private void perfromUpdate(HttpServletRequest request, HttpServletResponse response, JsonObject requestJson) throws IllegalArgumentException, IOException 
 	{
-		//Read JSon from request
-	   /* StringBuilder sb = new StringBuilder();
-	    BufferedReader reader = request.getReader();
-	    try {
-	        String line;
-	        while ((line = reader.readLine()) != null) {
-	            sb.append(line).append('\n');
-	        }
-	    } finally {
-	        reader.close();
-	    }
-	    
-	    
-	    
-	    
-	    JsonObject requestJson = (JsonObject)new JsonParser().parse(sb.toString());*/
 	    
 	  //get Accident
 	    java.sql.Date sqlFormatDate;
@@ -344,46 +382,52 @@ public class AccidentServlet extends HttpServlet {
 				case SET_TOWING_ETA:
 					
 					//get
-					JsonPrimitive towingEtaPrimitive 	   = requestJson.getAsJsonPrimitive("towingETA");		//towingNeeded
-					JsonPrimitive towingEtaNeededPrimitive = requestJson.getAsJsonPrimitive("towingNeeded");	
+					JsonPrimitive towingEtaPrimitive = requestJson.getAsJsonPrimitive("towingETA");		//towingNeeded
+					//JsonPrimitive towingEtaNeededPrimitive = requestJson.getAsJsonPrimitive("towingNeeded");	
 					
 					//convert
 		            sqlFormatDate = java.sql.Date.valueOf(towingEtaPrimitive.getAsString());
-		            Boolean towingETANeeded = towingEtaNeededPrimitive.getAsBoolean();	
+		            //Boolean towingETANeeded = towingEtaNeededPrimitive.getAsBoolean();	
 		            
 		            //set
 					currAccident.setTowingETA(sqlFormatDate);													
-					currAccident.setTowingNeeded(towingETANeeded);	
+					currAccident.setTowingNeeded(true);	
 										
 					break;
 					
 				case SET_CAR_REPLACEMENT_ETA:
 					
 					//get
-					JsonPrimitive carReplacementETAPrimitive 	= requestJson.getAsJsonPrimitive("carReplacementETA");	
-					JsonPrimitive carreplacementNeededPrimitive = requestJson.getAsJsonPrimitive("carreplacementNeeded");	
+					JsonPrimitive carReplacementETAPrimitive = requestJson.getAsJsonPrimitive("carReplacementETA");	
+					//JsonPrimitive carreplacementNeededPrimitive = requestJson.getAsJsonPrimitive("carreplacementNeeded");	
 					
 					//convert
 		            sqlFormatDate = java.sql.Date.valueOf(carReplacementETAPrimitive.getAsString());
-		            Boolean carreplacementNeeded = carreplacementNeededPrimitive.getAsBoolean();
+		            //Boolean carreplacementNeeded = carreplacementNeededPrimitive.getAsBoolean();
 		            
 		            //set
 					currAccident.setCarReplacementETA(sqlFormatDate);
-					currAccident.setCarreplacementNeeded(carreplacementNeeded);
-						
+					currAccident.setCarreplacementNeeded(true);
+					
+					break;
 				case SET_CLAIM_SENT:
-					JsonPrimitive claimStatusSentPrimitive = requestJson.getAsJsonPrimitive("towingETA");					
-					Boolean claimStatusSent = claimStatusSentPrimitive.getAsBoolean();					
-					currAccident.setCarreplacementNeeded(claimStatusSent);																			
+					JsonPrimitive claimStatusSentPrimitive = requestJson.getAsJsonPrimitive("claimSentToInsurance");					
+					Boolean claimStatusSent = claimStatusSentPrimitive.getAsBoolean();							
+					currAccident.setClaimSentToInsurance(claimStatusSent);																			
+					break;
 					
 				case SET_CLAIM_STATUS:
 					JsonPrimitive claimetStatusPrimitive = requestJson.getAsJsonPrimitive("claimStatus");					
 					ClaimStatus claimStatusPrimitive = ClaimStatus.valueOf(claimetStatusPrimitive.getAsString()); 					
-					currAccident.setClaimStatus(claimStatusPrimitive);										
+					currAccident.setClaimStatus(claimStatusPrimitive);
+					break;
 					
-				case CREATE:					
+				default:
+					break;										
+					
+				/*case CREATE:					
 					IllegalArgumentException wrongOperation = new IllegalArgumentException("Wrong ");
-					throw wrongOperation;
+					throw wrongOperation;*/
 			}
 		    
 		  //commit
