@@ -37,6 +37,41 @@ reportingControllers.controller('ClaimsCtrl',
 
         }
 
+        $scope.$on('$routeChangeSuccess', function () {
+
+            $scope.claimsArray = [];
+
+
+            backendSrv.getAccidentsList().then(
+                function(data) {
+                    $scope.$apply(function() {
+                        _.each(data.accidents, function (e, i) {
+                            $scope.claimsArray.push(
+                                {
+                                    claimId: e.accidentId,
+                                    name: "Meir Rotstein",
+                                    userName: "i070386",
+                                    inProcess: true,
+                                    completed: false,
+                                    phoneNumber: 0528962135,
+                                    claimToInsurance: true,
+                                    towingTruckSent: true,
+                                    replacmentCarSent: false,
+                                    medicalAssistanceSent: false
+                                }
+                            )
+                        })
+                    });
+
+
+                },
+
+                function(data) {
+
+                }
+
+            )
+        });
 
     }
 );

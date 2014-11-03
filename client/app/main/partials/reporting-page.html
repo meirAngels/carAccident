@@ -16,25 +16,33 @@
                         <legend class="text-center header">Driver Details</legend>
                         <div class="form-group">
                             <div class="col-md-10 col-md-offset-1">
-                                <input id="fname" name="name" type="text" placeholder="First Name" class="form-control">
+                                <input id="fname" name="fname" ng-model="user.fname" type="text" placeholder="First Name" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-10 col-md-offset-1">
-                                <input id="lname" name="name" type="text" placeholder="Last Name" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-10 col-md-offset-1">
-                                <input id="email" name="email" type="text" placeholder="Email Address" class="form-control">
+                                <input id="lname" name="lname"  ng-model="user.lname" type="text" class="form-control" readonly>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-md-10 col-md-offset-1">
-                                <input id="phone" name="phone" type="text" placeholder="Phone" class="form-control">
+                                <input id="email" name="email" ng-model="user.email" type="text" placeholder="Email Address" class="form-control" readonly>
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-1">
+                                <input id="phone" name="phone" ng-model="user.phone" type="text" placeholder="Phone" class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-md-offset-1 inner_text text-center">
+                            Is that you?
+                            <!--input class="switch-button" type="checkbox" checked data-on-color="success" data-off-color="danger" ng-model="injuried"-->
+                            <input type="checkbox" ng-model="user.confirmed" bootstrap-switch checked data-on-color="success" data-off-color="danger" on-text="YES" off-text="NO">
+                            <br/><br/>
+                            <p class="{{{false:'fade in' , true : 'fade'}[user.confirmed]}}">Please <a href="/">login</a> Again</p>
                         </div>
 
                     </fieldset>
@@ -75,7 +83,13 @@
                     <fieldset>
                         <div class="form-group">
                             <div class="col-md-12 text-center">
-                                <button type="submit" class="btn btn-primary btn-lg">Report</button>
+                                <button type="submit" class="btn btn-primary btn-lg" ng-click="submit()">Report</button>
+                                <p class="{{{true:'fade in' , false : 'fade'}[submitSucceded]}} inner_text text-center">
+                                    Your accident was successfully reported - help is on the way!
+                                </p>
+                                <p class="{{{true:'fade in' , false : 'fade'}[submitFalied]}} inner_text_alert text-center">
+                                    Please check you inputs
+                                </p>
                             </div>
                         </div>
                     </fieldset>

@@ -80,6 +80,7 @@ module.exports = function(grunt) {
                                 './bower_components/angular-route/angular-route.min.js',
                                 './bower_components/q/q.js',
                                 './bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js',
+                                './bower_components/lodash/dist/lodash.min.js',
 
                                 SRC_BASE + '/main/js/*'
                         ],

@@ -11,7 +11,7 @@ reportingControllers.controller('SelectionCtrl',
 
 
         $scope.reportAccident = function(){
-            $location.path("/")
+            $location.path("/reporting")
         }
 
         $scope.handleOpenClaims = function(){

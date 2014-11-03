@@ -34,6 +34,7 @@ reportingApp.directive('gmapsframe', function( $compile , locationSrv ) {
         locationSrv.getCurrentPosition().then(
 
             function(pos){
+                $scope.gmaplocation = pos.coords;
                 var mapOptions = {
                     center: { lat: pos.coords.latitude, lng: pos.coords.longitude},
                     zoom: 15
