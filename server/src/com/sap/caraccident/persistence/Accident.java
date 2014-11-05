@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="T_ACCIDENT")
 
-@NamedQueries({ @NamedQuery(name = "GetAllAccidents", query = "Select a from Accident a"), 
+@NamedQueries({ @NamedQuery(name = "getAllOpenAccidents", query = "Select a from Accident a Where a.claimStatus = :claimStatus"), 
 			    @NamedQuery(name = "GetAccidentById", query = "Select a from Accident a Where a.accidentId = :accidentId")})
 
 public class Accident implements Serializable {

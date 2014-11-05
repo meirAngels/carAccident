@@ -2,6 +2,7 @@ package com.sap.carAccident.servlets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.security.Principal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -13,6 +14,8 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +34,10 @@ import com.google.gson.JsonPrimitive;
 import com.sap.carAccident.persistence.Accident;
 import com.sap.carAccident.persistence.ClaimStatus;
 import com.sap.carAccident.persistence.ThirdParty;
+import com.sap.security.auth.login.LoginContextFactory;
+import com.sap.security.um.service.UserManagementAccessor;
+import com.sap.security.um.user.PersistenceException;
+import com.sap.security.um.user.User;
 
 
 /**
@@ -93,6 +100,28 @@ public class AccidentServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+/*		String user = request.getRemoteUser();
+		if (user == null) {
+			// if user is not logedon
+			 LoginContext loginContext;
+			 try {
+				loginContext = LoginContextFactory.createLoginContext("FORM");
+				loginContext.login();
+			} catch (LoginException e) {
+				e.printStackTrace();
+			}
+		}
+		//if user is loged on      
+		 String userName = request.getUserPrincipal().getName();
+	     try {
+			User currentUser = UserManagementAccessor.getUserProvider().getUser(userName);
+			response.getWriter().println("loged in user is " + currentUser.getName());
+		} catch (PersistenceException e1) {
+			e1.printStackTrace();
+		}*/
+		
+		
+	    // call get specific accident or all accidents
         try {
         	String accidentId = request.getParameter("accidentId");
         	if(accidentId != "Undefined" && accidentId != null && !accidentId.isEmpty()){
@@ -100,7 +129,7 @@ public class AccidentServlet extends HttpServlet {
         		getAccident(response, Integer.parseInt(accidentId));	
         	}
         	else{
-        		getAllAccidents(response);
+        		getAllOpenAccidents(response);
         	}
         	
         } catch (Exception e) {
@@ -115,6 +144,26 @@ public class AccidentServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		/*String user = request.getRemoteUser();
+		if (user == null) {
+			// if user is not logedon
+			 LoginContext loginContext;
+			 try {
+				loginContext = LoginContextFactory.createLoginContext("FORM");
+				loginContext.login();
+			} catch (LoginException e) {
+				e.printStackTrace();
+			}
+		}
+		//if user is loged on      
+		 String userName = request.getUserPrincipal().getName();
+	     try {
+			User currentUser = UserManagementAccessor.getUserProvider().getUser(userName);
+			response.getWriter().println("loged in user is " + currentUser.getName());
+		} catch (PersistenceException e1) {
+			e1.printStackTrace();
+		}*/
 
     //Read JSon from request
     StringBuilder sb = new StringBuilder();
@@ -217,13 +266,13 @@ public class AccidentServlet extends HttpServlet {
 	    }
 	    	    
 	    JsonArray thirdpartyJsonArray = jsonAccidentObject.getAsJsonArray("thirdparty");
-	    
+	    if (thirdpartyJsonArray != null){
 	    //Set third Party
-	    for(JsonElement thirdpartyElement : thirdpartyJsonArray)
-	    {	
-	    	setThirdPartyElement(em, accidentId, thirdpartyElement);
-	    }	    	   	    	    
-	   
+		    for(JsonElement thirdpartyElement : thirdpartyJsonArray)
+		    {	
+		    	setThirdPartyElement(em, accidentId, thirdpartyElement);
+		    }	    	   	    	    
+	    }
 	    
 	    // Save accident in DB
 	    em.getTransaction().begin();
@@ -259,12 +308,12 @@ public class AccidentServlet extends HttpServlet {
 	}
 	
 
-	private void getAllAccidents(HttpServletResponse response) throws SQLException, IOException {
+	private void getAllOpenAccidents(HttpServletResponse response) throws SQLException, IOException {
 		EntityManager em = emf.createEntityManager();
 		try 
         {
 			@SuppressWarnings("unchecked")
-			List<Accident> accidentResultList = em.createNamedQuery("GetAllAccidents").getResultList();
+			List<Accident> accidentResultList = em.createNamedQuery("getAllOpenAccidents").setParameter("claimStatus", ClaimStatus.OPEN).getResultList();
 			JsonObject accidentsJSon = new JsonObject();
             JsonArray accidentsArray = new JsonArray();
             accidentsJSon.add("accidents", accidentsArray);
