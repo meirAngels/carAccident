@@ -52,12 +52,28 @@ reportingApp.service('backendSrv',function($http) {
 
         this.saveOpenClaim = function(accidentID, towingETA, carReplacementETA, claimSentToInsurance, claimStatus){
 
-            var towinPromise = this._setTowingETA(accidentID, towingETA);
-            var carReplacmentPromise = this._setCarReplacementETA(accidentID, carReplacementETA);
+
+            /** This is very ugly code **/
+
+            var towinPromise;
+            var carReplacmentPromise
+
+            if(towingETA !== "")
+                towinPromise = this._setTowingETA(accidentID, towingETA);
+            if(carReplacementETA !== "")
+                carReplacmentPromise = this._setCarReplacementETA(accidentID, carReplacementETA);
+
             var claimsSentPromise = this._setClaimSent(accidentID, claimSentToInsurance);
             var calimsStatusPromise = this._setClaimStatus(accidentID, claimStatus);
 
-            return Q.all([towinPromise, carReplacmentPromise, claimsSentPromise, calimsStatusPromise]);
+            if(towinPromise && carReplacmentPromise)
+                return Q.all([towinPromise, carReplacmentPromise, claimsSentPromise, calimsStatusPromise]);
+            if(towinPromise && !carReplacmentPromise)
+                return Q.all([towinPromise, claimsSentPromise, calimsStatusPromise]);
+            if(!towinPromise && carReplacmentPromise)
+                return Q.all([carReplacmentPromise, claimsSentPromise, calimsStatusPromise]);
+            if(!towinPromise && !carReplacmentPromise)
+                return Q.all([claimsSentPromise, calimsStatusPromise]);
         }
     }
 );

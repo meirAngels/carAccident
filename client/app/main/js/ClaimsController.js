@@ -39,7 +39,31 @@ reportingControllers.controller('ClaimsCtrl',
 
         $scope.save = function(){
 
-            backendSrv.saveOpenClaim($scope.currentAccident.accidentId, $scope.currentAccident.towingETA, $scope.currentAccident.carReplacementETA, $scope.currentAccident.claimSentToInsurance, $scope.currentAccident.claimStatus)
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var day = currentDate.getDate();
+            var month = currentDate.getMonth() + 1;
+            var towingArray = $scope.currentAccident.towingETA.split(":");
+            var carReplacementArray = $scope.currentAccident.carReplacementETA.split(":");
+
+            var towingHour = towingArray[0];
+            var towingMinute = towingArray[1];
+            var carReplacementHour = carReplacementArray[0];
+            var carReplacementMin = carReplacementArray[1];
+
+            var towingETA;
+            if(towingArray.length >1)
+                towingETA = day+"/"+month+"/"+year+" "+towingHour+":"+towingMinute;
+            else
+                towingETA = "";
+            var carReplacementETA;
+
+            if(carReplacementArray.length >1)
+                carReplacementETA = day+"/"+month+"/"+year+" "+carReplacementHour+":"+carReplacementMin;
+            else
+                carReplacementETA = "";
+
+            backendSrv.saveOpenClaim($scope.currentAccident.accidentId, towingETA, carReplacementETA, $scope.currentAccident.claimSentToInsurance, $scope.currentAccident.claimStatus)
                 .then(function(data, status, headers, config){
 
                 })
@@ -52,7 +76,17 @@ reportingControllers.controller('ClaimsCtrl',
 
         $scope.$on('$routeChangeSuccess', function () {
 
-            backendSrv.getAccidentsList().then(
+            obj =    {"accidents":[{name:"Joe Dow", userId:"i070385",phoneNumber:0528962135,"accidentId":121212,"date":"2014-10-27","description":"Meir crashed the bus in Nepal","geolocation":"26.5333 N, 86.7333 E",
+                "towingneeded":true,"claimStatus":"IN_PROCESS","claimSentToInsurance":false,"towingETA":"","carReplacementETA":"","carreplacementneeded":false,
+                "injuries":true,"thirdparty":[]}]}
+            var claimsArrary = obj.accidents;
+
+
+            $scope.claimsArray= claimsArrary;
+
+
+
+       /*     backendSrv.getAccidentsList().then(
                 function(data) {
                     $scope.$apply(function() {
                         _.each(data.accidents, function (obj, i) {
@@ -73,7 +107,7 @@ reportingControllers.controller('ClaimsCtrl',
 
                 }
 
-            )
+            )*/
         });
 
     }
