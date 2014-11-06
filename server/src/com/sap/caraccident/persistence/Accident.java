@@ -1,12 +1,17 @@
 package com.sap.carAccident.persistence;
 
 import java.io.Serializable;
-import java.lang.Byte;
-import java.lang.Integer;
-import java.lang.String;
-import java.sql.Date;
+import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 
 /**
  * Entity implementation class for Entity: Accident
@@ -17,27 +22,35 @@ import javax.persistence.*;
 
 @NamedQueries({ @NamedQuery(name = "getAllOpenAccidents", query = "Select a from Accident a Where a.claimStatus = :claimStatus"), 
 			    @NamedQuery(name = "GetAccidentById", query = "Select a from Accident a Where a.accidentId = :accidentId")})
-
 public class Accident implements Serializable {
 
 	@Id
 	private Integer accidentId;
 	
 	private String userName;
-	private Date date;
+	
+	@Temporal(TemporalType.DATE)
+	private Date accidentDate;
+	
 	private String description;
 	private String geolocation;
+	
+	@Lob
 	private Byte[] damage;
 	
 	private boolean towingNeeded;
+	@Temporal(TemporalType.DATE)
 	private Date towingETA;
 
 	private boolean carreplacementNeeded;
+	
+	@Temporal(TemporalType.DATE)
 	private Date carReplacementETA;
 
 	private boolean claimSentToInsurance;
 	private boolean injuries;
-	private ClaimStatus claimStatus;
+	// Should be enum but there is problems with enum inside HCP
+	private String claimStatus;
 	private int thirdPartyId;
 
 	private static final long serialVersionUID = 1L;
@@ -60,11 +73,11 @@ public class Accident implements Serializable {
 		this.accidentId = accidentId;
 	}   
 	public Date getDate() {
-		return this.date;
+		return this.accidentDate;
 	}
 
 	public void setDate(Date date) {
-		this.date = date;
+		this.accidentDate = date;
 	}   
 	public String getDescription() {
 		return this.description;
@@ -139,7 +152,7 @@ public class Accident implements Serializable {
 	public String getClaimStatus() {
 		return claimStatus.toString();
 	}
-	public void setClaimStatus(ClaimStatus claimStatus) {
+	public void setClaimStatus(String claimStatus) {
 		this.claimStatus = claimStatus;
 	}
    

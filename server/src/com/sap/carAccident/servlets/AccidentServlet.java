@@ -3,8 +3,12 @@ package com.sap.carAccident.servlets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.security.Principal;
-import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +104,7 @@ public class AccidentServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-/*		String user = request.getRemoteUser();
+		/*String user = request.getRemoteUser();
 		if (user == null) {
 			// if user is not logedon
 			 LoginContext loginContext;
@@ -201,9 +205,14 @@ public class AccidentServlet extends HttpServlet {
 	    
 	    JsonPrimitive dateJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("date");
 	    if (dateJsonPrimitive != null){
-	    	String date = dateJsonPrimitive.getAsString();
-	    	java.sql.Date sqlFormatDate = java.sql.Date.valueOf(date);
-	    	 carAccident.setDate(sqlFormatDate);
+	    	String strdate = dateJsonPrimitive.getAsString();
+	    	DateFormat formatter = new SimpleDateFormat("d-MM-yyyy");
+	    	try {
+				java.util.Date date = formatter.parse(strdate);
+				carAccident.setDate(date);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 	    }
 	    
 	    JsonPrimitive descriptionJsonPrimitive 	= jsonAccidentObject.getAsJsonPrimitive("description");
@@ -239,9 +248,14 @@ public class AccidentServlet extends HttpServlet {
 	    	    
 	    JsonPrimitive carReplacementETAJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("carReplacementETA");
 	    if (carReplacementETAJsonPrimitive != null){
-	    	String carReplacementETA = carReplacementETAJsonPrimitive.getAsString();
-	    	java.sql.Date sqlFormatDate = java.sql.Date.valueOf(carReplacementETA);
-		    carAccident.setCarReplacementETA(sqlFormatDate);
+	    	String strCarReplacementETA = carReplacementETAJsonPrimitive.getAsString();
+	    	DateFormat formatter = new SimpleDateFormat("d-MM-yyyy");
+	    	try {
+				java.util.Date date = formatter.parse(strCarReplacementETA);
+				carAccident.setDate(date);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 	    }	    
 	    
 	    JsonPrimitive injuriesJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("injuries");
@@ -259,10 +273,10 @@ public class AccidentServlet extends HttpServlet {
 	    JsonPrimitive claimStatusPrimitive = jsonAccidentObject.getAsJsonPrimitive("claimStatus");
 	    if (claimStatusPrimitive != null){
 	    	String claimStatus = claimStatusPrimitive.getAsString();
-	    	carAccident.setClaimStatus(ClaimStatus.valueOf(claimStatus));	    
+	    	carAccident.setClaimStatus(claimStatus);	    
 	    }	    	  
 	    else{
-	    	carAccident.setClaimStatus(ClaimStatus.OPEN);
+	    	carAccident.setClaimStatus("OPEN");
 	    }
 	    	    
 	    JsonArray thirdpartyJsonArray = jsonAccidentObject.getAsJsonArray("thirdparty");
@@ -313,7 +327,7 @@ public class AccidentServlet extends HttpServlet {
 		try 
         {
 			@SuppressWarnings("unchecked")
-			List<Accident> accidentResultList = em.createNamedQuery("getAllOpenAccidents").setParameter("claimStatus", ClaimStatus.OPEN).getResultList();
+			List<Accident> accidentResultList = em.createNamedQuery("getAllOpenAccidents").setParameter("claimStatus", "OPEN").getResultList();
 			JsonObject accidentsJSon = new JsonObject();
             JsonArray accidentsArray = new JsonArray();
             accidentsJSon.add("accidents", accidentsArray);
@@ -403,11 +417,11 @@ public class AccidentServlet extends HttpServlet {
 		
 	}
 	
+	@SuppressWarnings("static-access")
 	private void perfromUpdate(HttpServletRequest request, HttpServletResponse response, JsonObject requestJson) throws IllegalArgumentException, IOException 
 	{
 	    
 	  //get Accident
-	    java.sql.Date sqlFormatDate;
 	    JsonPrimitive accidentIdPrimitive = requestJson.getAsJsonPrimitive("accidentId"); 
 	    EntityManager em = emf.createEntityManager();
 	    @SuppressWarnings("rawtypes")
@@ -427,20 +441,28 @@ public class AccidentServlet extends HttpServlet {
 	    	    	   
 	    	// branch according to update type
 	    	Operation operation = Operation.valueOf(request.getHeader("OPERATION"));
+	    	DateFormat formatter = null;
 		    switch (operation) {
 				case SET_TOWING_ETA:
 					
 					//get
 					JsonPrimitive towingEtaPrimitive = requestJson.getAsJsonPrimitive("towingETA");		//towingNeeded
-					//JsonPrimitive towingEtaNeededPrimitive = requestJson.getAsJsonPrimitive("towingNeeded");	
 					
 					//convert
-		            sqlFormatDate = java.sql.Date.valueOf(towingEtaPrimitive.getAsString());
-		            //Boolean towingETANeeded = towingEtaNeededPrimitive.getAsBoolean();	
+					String strTowingEta = towingEtaPrimitive.getAsString();
+				    formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+			    	try {
+						java.util.Date date = formatter.parse(strTowingEta);
+						
+						  //set
+						currAccident.setTowingETA(date);													
+						currAccident.setTowingNeeded(true);	
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
 		            
-		            //set
-					currAccident.setTowingETA(sqlFormatDate);													
-					currAccident.setTowingNeeded(true);	
+		            
+		          
 										
 					break;
 					
@@ -448,16 +470,20 @@ public class AccidentServlet extends HttpServlet {
 					
 					//get
 					JsonPrimitive carReplacementETAPrimitive = requestJson.getAsJsonPrimitive("carReplacementETA");	
-					//JsonPrimitive carreplacementNeededPrimitive = requestJson.getAsJsonPrimitive("carreplacementNeeded");	
 					
 					//convert
-		            sqlFormatDate = java.sql.Date.valueOf(carReplacementETAPrimitive.getAsString());
-		            //Boolean carreplacementNeeded = carreplacementNeededPrimitive.getAsBoolean();
+		            String strCarReplacementETA =  carReplacementETAPrimitive.getAsString();
 		            
-		            //set
-					currAccident.setCarReplacementETA(sqlFormatDate);
-					currAccident.setCarreplacementNeeded(true);
-					
+		            formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+			    	try {
+						java.util.Date date = formatter.parse(strCarReplacementETA);
+						  //set
+						currAccident.setCarReplacementETA(date);
+						currAccident.setCarreplacementNeeded(true);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+		            
 					break;
 				case SET_CLAIM_SENT:
 					JsonPrimitive claimStatusSentPrimitive = requestJson.getAsJsonPrimitive("claimSentToInsurance");					
@@ -467,16 +493,13 @@ public class AccidentServlet extends HttpServlet {
 					
 				case SET_CLAIM_STATUS:
 					JsonPrimitive claimetStatusPrimitive = requestJson.getAsJsonPrimitive("claimStatus");					
-					ClaimStatus claimStatusPrimitive = ClaimStatus.valueOf(claimetStatusPrimitive.getAsString()); 					
+					String claimStatusPrimitive = claimetStatusPrimitive.getAsString(); 					
 					currAccident.setClaimStatus(claimStatusPrimitive);
 					break;
 					
 				default:
 					break;										
 					
-				/*case CREATE:					
-					IllegalArgumentException wrongOperation = new IllegalArgumentException("Wrong ");
-					throw wrongOperation;*/
 			}
 		    
 		  //commit
