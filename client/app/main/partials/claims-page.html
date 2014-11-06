@@ -15,33 +15,36 @@
 
 <div class="row">
 
+
     <label class="col-xs-9 col-sm-9 col-md-12 col-lg-12" style=";font-size: 30px;text-align:center;display: block;">Open Claims</label>
-    <div class="list-group col-xs-9 col-sm-9 col-md-1 col-lg-1" style="overflow: auto;max-height: 250px" >
-        <div ng-repeat="calim in claimsArray">
-            <button class="list-group-item" style="width: 150px" ng-click="claimClicked(calim.claimId)">{{calim.claimId}}</button>
+
+    <div style="border-right: 1px solid lightgray; text-align: center;height: 450px" class="list-group col-xs-9 col-sm-9 col-md-1 col-lg-1">
+        <label>Claims ID</label>
+        <div  ng-repeat="calim in claimsArray">
+            <button class="list-group-item" style="width: 150px" ng-click="claimClicked(calim.accidentId)">{{calim.accidentId}}</button>
         </div>
     </div>
 
 
 
-    <div class="col-xs-12 col-sm-12 col-md-11 col-lg-11 claimsdata">
+    <div ng-show="showClaim" class="col-xs-12 col-sm-12 col-md-11 col-lg-11 claimsdata">
 
 
         <div>
             <label>Name:</label>
-            <span style="display: inline-block">{{name}}</span>
+            <span style="display: inline-block">{{currentAccident.name}}</span>
         </div>
 
         <div style="margin-top: 20px">
             <label>Username:</label>
-            <span>{{username}}</span>
+            <span>{{currentAccident.userId}}</span>
         </div>
 
         <div style="margin-top: 20px">
             <a href="#">
                 <img src="assets/img/phone.jpg" style="width: 30px;height: 30px">
             </a>
-            <label>{{phoneNumber}}</label>
+            <label>{{currentAccident.phoneNumber}}</label>
 
         </div>
 
@@ -49,36 +52,58 @@
 
         <div style="margin-top: 30px">
             <div style="margin-top: 10px">
-                <input type="checkbox" autocomplete="off" ng-model="claimToInsurance"><span style="margin-left: 10px">Claim submitted to the insurance company</span>
+                <input type="checkbox" autocomplete="off" ng-model="currentAccident.claimSentToInsurance"><span style="margin-left: 10px">Claim submitted to the insurance company</span>
             </div>
 
-            <div  style="margin-top: 10px">
-                <input type="checkbox" autocomplete="off" ng-model="towingTruckSent"><span style="margin-left: 10px">Towing truck sent to the employee's location</span>
+            <div  style="margin-top: 30px">
+
+                <span style="float:left;padding-top: 5px;margin-right: 45px">Towing truck ETA: </span>
+                <div ng-disabled="towingneededDisabled" style="width: 100px" class="input-group clockpicker" data-align="top" data-autoclose="true">
+                    <input  ng-disabled="towingneededDisabled" type="text" class="form-control" ng-model="currentAccident.towingETA">
+
+                </div>
+
             </div>
 
-            <div  style="margin-top: 10px">
-                <input type="checkbox" autocomplete="off"><span style="margin-left: 10px">Replacement car is sent to the employee's location</span>
+
+
+            <div  style="margin-top: 30px">
+
+                <span style="float:left;padding-top: 5px;margin-right: 20px">Replacement car ETA: </span>
+                <div  style="width: 100px" class="input-group clockpicker" data-align="top" data-autoclose="true">
+                    <input ng-disabled="carreplacementneededDisabled" type="text" class="form-control" ng-model="currentAccident.carReplacementETA">
+
+                </div>
+
             </div>
 
-            <div  style="margin-top: 10px">
-                <input type="checkbox" autocomplete="off"><span style="margin-left: 10px">Medical assistance sent to the employee's location</span>
-            </div>
+
         </div>
+
+
 
 
         <div>
             <div class="btn-group" style="margin-left: auto;margin-right: auto;margin-top: 30px">
                 <label class="btn btn-primary">
-                    <input type="radio" name="options" id="option1" autocomplete="off" ng-model="inProcess" ng-value="true"> In Process
+                    <input type="radio" name="options" id="option1" autocomplete="off" value = "IN_PROCESS" ng-model="currentAccident.claimStatus"> In Process
                 </label>
                 <label class="btn btn-primary">
-                    <input type="radio" name="options" id="option2" autocomplete="off" ng-model="completed" ng-value="true"> Completed
+                    <input type="radio" name="options" id="option2" autocomplete="off" value ="CLOSED" ng-model="currentAccident.claimStatus"> Completed
                 </label>
             </div>
         </div>
 
 
-        <button type="submit" class="btn btn-default" style="margin-top: 20px">Save</button>
+        <button ng-click="save()" type="submit" class="btn btn-default" style="margin-top: 30px">Save</button>
+
+
+
+
+        <script type="text/javascript">
+            $('.clockpicker').clockpicker({ 'default': 'now'});
+        </script>
+
 
 
     </div>

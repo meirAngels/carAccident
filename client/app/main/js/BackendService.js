@@ -33,5 +33,31 @@ reportingApp.service('backendSrv',function($http) {
 
             return deferred.promise;
         }
+
+        this._setTowingETA = function(accidentID, towingETA){
+            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentID:accidentID, towingETA:towingETA}, headers:{operation:"SET_TOWING_ETA"}});
+        }
+
+        this._setCarReplacementETA = function(accidentID, carReplacementETA){
+            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentID:accidentID, carReplacementETA:carReplacementETA}, headers:{operation:"SET_CAR_REPLACEMENT_ETA"}});
+        }
+
+        this._setClaimSent = function(accidentID, claimSentToInsurance){
+            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentID:accidentID, claimSentToInsurance:claimSentToInsurance}, headers:{operation:"SET_CLAIM_SENT"}});
+        }
+
+        this._setClaimStatus = function(accidentID, claimStatus){
+            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentID:accidentID, claimStatus:claimStatus}, headers:{operation:"SET_CLAIM_STATUS"}});
+        }
+
+        this.saveOpenClaim = function(accidentID, towingETA, carReplacementETA, claimSentToInsurance, claimStatus){
+
+            var towinPromise = this._setTowingETA(accidentID, towingETA);
+            var carReplacmentPromise = this._setCarReplacementETA(accidentID, carReplacementETA);
+            var claimsSentPromise = this._setClaimSent(accidentID, claimSentToInsurance);
+            var calimsStatusPromise = this._setClaimStatus(accidentID, claimStatus);
+
+            return Q.all([towinPromise, carReplacmentPromise, claimsSentPromise, calimsStatusPromise]);
+        }
     }
 );

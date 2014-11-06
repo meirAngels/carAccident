@@ -2,29 +2,29 @@ reportingControllers.controller('ClaimsCtrl',
     function ($scope, $location, backendSrv) {
 
 
-        $scope.claimsArray = [{claimId:"claimTest1",name:"Joe Sobe", userName:"i070386", inProcess:true,completed:false,phoneNumber:0528962135, claimToInsurance:true, towingTruckSent:true, replacmentCarSent:false, medicalAssistanceSent:false},{claimId:"claimTest2",name:"Joe2 Sobe2", userName:"444", inProcess:false,completed:false,phoneNumber:666, claimToInsurance:false, towingTruckSent:false, replacmentCarSent:false, medicalAssistanceSent:false}]
 
-        $scope.name;
-        $scope.username;
-        $scope.phoneNumber;
-        $scope.claimToInsurance;
-        $scope.towingTruckSent;
-        $scope.inProcess;
-        $scope.completed;
+        $scope.claimsArray = []
+
+        $scope.currentAccident;
+
+
+        $scope.towingneededDisabled = false;
+        $scope.carreplacementneededDisabled = false;
+
+        $scope.showClaim = false;
+
 
         $scope.claimClicked = function(claimId){
+            $scope.showClaim = true;
             var claimsArray = $scope.claimsArray;
             for(var i=0; i<claimsArray.length; i++)
             {
-                if(claimsArray[i].claimId === claimId)
+                if(claimsArray[i].accidentId === claimId)
                 {
-                    $scope.name =  claimsArray[i].name;
-                    $scope.username = claimsArray[i].userName;
-                    $scope.phoneNumber = claimsArray[i].phoneNumber;
-                    $scope.claimToInsurance = claimsArray[i].claimToInsurance;
-                    $scope.towingTruckSent = claimsArray[i].towingTruckSent;
-                    $scope.inProcess = claimsArray[i].inProcess;
-                    $scope.completed = claimsArray[i].completed;
+                    $scope.currentAccident = claimsArray[i];
+                    $scope.towingneededDisabled = !($scope.currentAccident.towingneeded);
+                    $scope.carreplacementneededDisabled = !($scope.currentAccident.carreplacementneeded);
+
                 }
             }
         }
@@ -37,29 +37,32 @@ reportingControllers.controller('ClaimsCtrl',
 
         }
 
+        $scope.save = function(){
+
+            backendSrv.saveOpenClaim($scope.currentAccident.accidentId, $scope.currentAccident.towingETA, $scope.currentAccident.carReplacementETA, $scope.currentAccident.claimSentToInsurance, $scope.currentAccident.claimStatus)
+                .then(function(data, status, headers, config){
+
+                })
+                .fail(function(){
+
+                })
+
+
+        }
+
         $scope.$on('$routeChangeSuccess', function () {
-
-            $scope.claimsArray = [];
-
 
             backendSrv.getAccidentsList().then(
                 function(data) {
                     $scope.$apply(function() {
-                        _.each(data.accidents, function (e, i) {
-                            $scope.claimsArray.push(
-                                {
-                                    claimId: e.accidentId,
-                                    name: "Meir Rotstein",
-                                    userName: "i070386",
-                                    inProcess: true,
-                                    completed: false,
-                                    phoneNumber: 0528962135,
-                                    claimToInsurance: true,
-                                    towingTruckSent: true,
-                                    replacmentCarSent: false,
-                                    medicalAssistanceSent: false
-                                }
-                            )
+                        _.each(data.accidents, function (obj, i) {
+                            obj =    {"accidents":[{name:"Joe Dow", userId:"i070385",phoneNumber:0528962135,"accidentId":121212,"date":"2014-10-27","description":"Meir crashed the bus in Nepal","geolocation":"26.5333 N, 86.7333 E",
+                                "towingneeded":true,"claimStatus":"IN_PROCESS","claimSentToInsurance":false,"towingETA":"","carReplacementETA":"","carreplacementneeded":false,
+                                "injuries":true,"thirdparty":[]}]}
+                            var claimsArrary = obj.accidents;
+
+
+                            $scope.claimsArray= claimsArrary;
                         })
                     });
 
