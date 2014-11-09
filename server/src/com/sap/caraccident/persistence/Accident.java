@@ -20,7 +20,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="T_ACCIDENT")
 
-@NamedQueries({ @NamedQuery(name = "getAllOpenAccidents", query = "Select a from Accident a Where a.claimStatus = :claimStatus"), 
+@NamedQueries({ @NamedQuery(name = "getAllOpenAccidents", query = "Select a from Accident a"), 
 			    @NamedQuery(name = "GetAccidentById", query = "Select a from Accident a Where a.accidentId = :accidentId")})
 public class Accident implements Serializable {
 

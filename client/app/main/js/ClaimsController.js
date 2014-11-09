@@ -65,10 +65,10 @@ reportingControllers.controller('ClaimsCtrl',
 
             backendSrv.saveOpenClaim($scope.currentAccident.accidentId, towingETA, carReplacementETA, $scope.currentAccident.claimSentToInsurance, $scope.currentAccident.claimStatus)
                 .then(function(data, status, headers, config){
-
+                    var test=4;
                 })
                 .fail(function(){
-
+                    var test=4;
                 })
 
 
@@ -76,28 +76,12 @@ reportingControllers.controller('ClaimsCtrl',
 
         $scope.$on('$routeChangeSuccess', function () {
 
-            obj =    {"accidents":[{name:"Joe Dow", userId:"i070385",phoneNumber:0528962135,"accidentId":121212,"date":"2014-10-27","description":"Meir crashed the bus in Nepal","geolocation":"26.5333 N, 86.7333 E",
-                "towingneeded":true,"claimStatus":"IN_PROCESS","claimSentToInsurance":false,"towingETA":"","carReplacementETA":"","carreplacementneeded":false,
-                "injuries":true,"thirdparty":[]}]}
-            var claimsArrary = obj.accidents;
 
-
-            $scope.claimsArray= claimsArrary;
-
-
-
-       /*     backendSrv.getAccidentsList().then(
+            backendSrv.getAccidentsList().then(
                 function(data) {
                     $scope.$apply(function() {
-                        _.each(data.accidents, function (obj, i) {
-                            obj =    {"accidents":[{name:"Joe Dow", userId:"i070385",phoneNumber:0528962135,"accidentId":121212,"date":"2014-10-27","description":"Meir crashed the bus in Nepal","geolocation":"26.5333 N, 86.7333 E",
-                                "towingneeded":true,"claimStatus":"IN_PROCESS","claimSentToInsurance":false,"towingETA":"","carReplacementETA":"","carreplacementneeded":false,
-                                "injuries":true,"thirdparty":[]}]}
-                            var claimsArrary = obj.accidents;
-
-
-                            $scope.claimsArray= claimsArrary;
-                        })
+                        var claimsArrary = data.accidents;
+                        $scope.claimsArray= claimsArrary;
                     });
 
 
@@ -107,7 +91,7 @@ reportingControllers.controller('ClaimsCtrl',
 
                 }
 
-            )*/
+            )
         });
 
     }
