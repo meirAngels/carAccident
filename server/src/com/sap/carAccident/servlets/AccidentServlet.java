@@ -2,15 +2,11 @@ package com.sap.carAccident.servlets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.security.Principal;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +16,6 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -38,12 +32,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.sap.carAccident.persistence.Accident;
-import com.sap.carAccident.persistence.ClaimStatus;
 import com.sap.carAccident.persistence.ThirdParty;
-import com.sap.security.auth.login.LoginContextFactory;
-import com.sap.security.um.service.UserManagementAccessor;
-import com.sap.security.um.user.PersistenceException;
-import com.sap.security.um.user.User;
 
 
 /**
@@ -106,27 +95,6 @@ public class AccidentServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		/*String user = request.getRemoteUser();
-		if (user == null) {
-			// if user is not logedon
-			 LoginContext loginContext;
-			 try {
-				loginContext = LoginContextFactory.createLoginContext("FORM");
-				loginContext.login();
-			} catch (LoginException e) {
-				e.printStackTrace();
-			}
-		}
-		//if user is loged on      
-		 String userName = request.getUserPrincipal().getName();
-	     try {
-			User currentUser = UserManagementAccessor.getUserProvider().getUser(userName);
-			response.getWriter().println("loged in user is " + currentUser.getName());
-		} catch (PersistenceException e1) {
-			e1.printStackTrace();
-		}*/
-		
-		
 	    // call get specific accident or all accidents
         try {
         	String accidentId = request.getParameter("accidentId");
@@ -151,36 +119,16 @@ public class AccidentServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		/*String user = request.getRemoteUser();
-		if (user == null) {
-			// if user is not logedon
-			 LoginContext loginContext;
-			 try {
-				loginContext = LoginContextFactory.createLoginContext("FORM");
-				loginContext.login();
-			} catch (LoginException e) {
-				e.printStackTrace();
-			}
-		}
-		//if user is loged on      
-		 String userName = request.getUserPrincipal().getName();
-	     try {
-			User currentUser = UserManagementAccessor.getUserProvider().getUser(userName);
-			response.getWriter().println("loged in user is " + currentUser.getName());
-		} catch (PersistenceException e1) {
-			e1.printStackTrace();
-		}*/
-
-	    //Read JSon from request
-	    StringBuilder sb = new StringBuilder();
-	    BufferedReader reader = request.getReader();
-	    try {
-	        	String line;
-	        	while ((line = reader.readLine()) != null) {
-	        		sb.append(line).append('\n');
-	        	}
-	    	} 
-	    finally{
+    //Read JSon from request
+    StringBuilder sb = new StringBuilder();
+    BufferedReader reader = request.getReader();
+    try {
+        	String line;
+        	while ((line = reader.readLine()) != null) {
+        		sb.append(line).append('\n');
+        	}
+    	} 
+    finally{
     		reader.close();
     	}
     
@@ -201,12 +149,6 @@ public class AccidentServlet extends HttpServlet {
     	    
 	    int accidentId = (int) (new Date().getTime()/1000);
 	    carAccident.setAccidentId(accidentId);
-	    
-/*	    JsonPrimitive accidentIdJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("accidentId");
-	    if (accidentIdJsonPrimitive != null){
-	    	accidentId = accidentIdJsonPrimitive.getAsInt();
-	    	carAccident.setAccidentId(accidentId);
-	    }*/	    
 	    
 	    JsonPrimitive dateJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("date");
 	    if (dateJsonPrimitive != null){
@@ -327,6 +269,7 @@ public class AccidentServlet extends HttpServlet {
 	}
 	
 
+
 	private void getAllOpenAccidents(HttpServletResponse response) throws SQLException, IOException {
 		EntityManager em = emf.createEntityManager();
 		try 
@@ -354,8 +297,8 @@ public class AccidentServlet extends HttpServlet {
                 {
                 	towingETAStr = towingETA.toString();
                 }
-                             
                 accidentJSon.addProperty(TOWINGETA, towingETAStr);
+                
                 Date carReplacementETA = accident.getCarReplacementETA();
                 String carReplacementETAStr = "";
                 if (carReplacementETA != null)
@@ -363,6 +306,7 @@ public class AccidentServlet extends HttpServlet {
                 	carReplacementETAStr = carReplacementETA.toString();
                 }
                
+
                 accidentJSon.addProperty(CARREPLACEMENTETA, carReplacementETAStr);
                 accidentJSon.addProperty(CARREPLACEMENTNEEDED,accident.getCarreplacementNeeded());
                 accidentJSon.addProperty(INJURIES, accident.getInjuries());
