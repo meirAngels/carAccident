@@ -1,0 +1,34 @@
+[1mdiff --git a/client/app/main/js/ClaimsController.js b/client/app/main/js/ClaimsController.js[m
+[1mindex 572bd30..eaf84dc 100644[m
+[1m--- a/client/app/main/js/ClaimsController.js[m
+[1m+++ b/client/app/main/js/ClaimsController.js[m
+[36m@@ -2,24 +2,24 @@[m [mreportingControllers.controller('ClaimsCtrl',[m
+     function ($scope, $location, backendSrv) {[m
+ [m
+ [m
+[31m-        $scope.claimsArray = [{claimId:"claimTest1",name:"Joe Sobe", userName:"i070386", inProcess:true,completed:false,phoneNumber:0528962135, claimToInsurance:true, towingTruckSent:true, replacmentCarSent:false, medicalAssistanceSent:false},{claimId:"claimTest2",name:"Joe2 Sobe2", userName:"444", inProcess:false,completed:false,phoneNumber:666, claimToInsurance:false, towingTruckSent:false, replacmentCarSent:false, medicalAssistanceSent:false}][m
+[32m+[m[32m        $scope.claimsArray = [{accidentId:"claimTest1",name:"Joe Sobe", userId:"i070386", inProcess:true,completed:false,phoneNumber:0528962135, claimToInsurance:true, towingTruckSent:true, replacmentCarSent:false, medicalAssistanceSent:false},{accidentId:"claimTest2",name:"Joe2 Sobe2", userId:"444", inProcess:false,completed:false,phoneNumber:666, claimToInsurance:false, towingTruckSent:false, replacmentCarSent:false, medicalAssistanceSent:false}][m
+ [m
+         $scope.name;[m
+[31m-        $scope.username;[m
+[32m+[m[32m        $scope.userId;[m
+         $scope.phoneNumber;[m
+         $scope.claimToInsurance;[m
+         $scope.towingTruckSent;[m
+         $scope.inProcess;[m
+         $scope.completed;[m
+ [m
+[31m-        $scope.claimClicked = function(claimId){[m
+[32m+[m[32m        $scope.claimClicked = function(accidentId){[m
+             var claimsArray = $scope.claimsArray;[m
+             for(var i=0; i<claimsArray.length; i++)[m
+             {[m
+[31m-                if(claimsArray[i].claimId === claimId)[m
+[32m+[m[32m                if(claimsArray[i].accidentId === accidentId)[m
+                 {[m
+                     $scope.name =  claimsArray[i].name;[m
+[31m-                    $scope.username = claimsArray[i].userName;[m
+[32m+[m[32m                    $scope.userId = claimsArray[i].userId;[m
+                     $scope.phoneNumber = claimsArray[i].phoneNumber;[m
+                     $scope.claimToInsurance = claimsArray[i].claimToInsurance;[m
+                     $scope.towingTruckSent = claimsArray[i].towingTruckSent;[m
