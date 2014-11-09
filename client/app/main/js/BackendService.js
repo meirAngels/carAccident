@@ -35,19 +35,19 @@ reportingApp.service('backendSrv',function($http) {
         }
 
         this._setTowingETA = function(accidentID, towingETA){
-            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentId:accidentID, towingETA:towingETA}, headers:{operation:"SET_TOWING_ETA"}});
+            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentID:accidentID, towingETA:towingETA}, headers:{operation:"SET_TOWING_ETA"}});
         }
 
         this._setCarReplacementETA = function(accidentID, carReplacementETA){
-            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentId:accidentID, carReplacementETA:carReplacementETA}, headers:{operation:"SET_CAR_REPLACEMENT_ETA"}});
+            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentID:accidentID, carReplacementETA:carReplacementETA}, headers:{operation:"SET_CAR_REPLACEMENT_ETA"}});
         }
 
         this._setClaimSent = function(accidentID, claimSentToInsurance){
-            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentId:accidentID, claimSentToInsurance:claimSentToInsurance}, headers:{operation:"SET_CLAIM_SENT"}});
+            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentID:accidentID, claimSentToInsurance:claimSentToInsurance}, headers:{operation:"SET_CLAIM_SENT"}});
         }
 
         this._setClaimStatus = function(accidentID, claimStatus){
-            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentId:accidentID, claimStatus:claimStatus}, headers:{operation:"SET_CLAIM_STATUS"}});
+            return $http({method:'POST', url:"/server/AccidentServlet", data:{accidentID:accidentID, claimStatus:claimStatus}, headers:{operation:"SET_CLAIM_STATUS"}});
         }
 
         this.saveOpenClaim = function(accidentID, towingETA, carReplacementETA, claimSentToInsurance, claimStatus){
