@@ -7,7 +7,6 @@ import javax.persistence.*;
 
 /**
  * Entity implementation class for Entity: ThirdParty
- *
  */
 @Entity
 @Table(name="T_THIRDPARTY")

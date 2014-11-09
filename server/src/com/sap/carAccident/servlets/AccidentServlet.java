@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,16 +171,16 @@ public class AccidentServlet extends HttpServlet {
 			e1.printStackTrace();
 		}*/
 
-    //Read JSon from request
-    StringBuilder sb = new StringBuilder();
-    BufferedReader reader = request.getReader();
-    try {
-        	String line;
-        	while ((line = reader.readLine()) != null) {
-        		sb.append(line).append('\n');
-        	}
-    	} 
-    finally{
+	    //Read JSon from request
+	    StringBuilder sb = new StringBuilder();
+	    BufferedReader reader = request.getReader();
+	    try {
+	        	String line;
+	        	while ((line = reader.readLine()) != null) {
+	        		sb.append(line).append('\n');
+	        	}
+	    	} 
+	    finally{
     		reader.close();
     	}
     
@@ -196,12 +198,15 @@ public class AccidentServlet extends HttpServlet {
 	    Accident carAccident =  new Accident();	   				
 	    JsonObject jsonAccidentObject = json.getAsJsonObject("accident");
 	    
-	    int accidentId = 0;
-	    JsonPrimitive accidentIdJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("accidentId");
+    	    
+	    int accidentId = (int) (new Date().getTime()/1000);
+	    carAccident.setAccidentId(accidentId);
+	    
+/*	    JsonPrimitive accidentIdJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("accidentId");
 	    if (accidentIdJsonPrimitive != null){
 	    	accidentId = accidentIdJsonPrimitive.getAsInt();
 	    	carAccident.setAccidentId(accidentId);
-	    }	    
+	    }*/	    
 	    
 	    JsonPrimitive dateJsonPrimitive = jsonAccidentObject.getAsJsonPrimitive("date");
 	    if (dateJsonPrimitive != null){
@@ -357,18 +362,20 @@ public class AccidentServlet extends HttpServlet {
                 {
                 	carReplacementETAStr = carReplacementETA.toString();
                 }
-
-                
-
+               
                 accidentJSon.addProperty(CARREPLACEMENTETA, carReplacementETAStr);
                 accidentJSon.addProperty(CARREPLACEMENTNEEDED,accident.getCarreplacementNeeded());
                 accidentJSon.addProperty(INJURIES, accident.getInjuries());
                 accidentsArray.add(accidentJSon);
                 
                 @SuppressWarnings("unchecked")
-				List<ThirdParty> thirdpartyResultList = em.createNamedQuery("GetThirdPartiesForAccident").setParameter("accidentThirdPartyId", 1231).getResultList();
-                JsonArray thirdpartyArray = new JsonArray();
-                accidentJSon.add("thirdparty", thirdpartyArray);
+				List<ThirdParty> thirdpartyResultList = 
+					em.createNamedQuery("GetThirdPartiesForAccident")
+						.setParameter("accidentThirdPartyId", accident.getAccidentId())
+							.getResultList();
+                
+                JsonArray thirdpartyArray = new JsonArray();                               
+                
                 for (ThirdParty thirdparty : thirdpartyResultList) {
 	                //Create thirdParty json objects inside accident object
 	                JsonObject thirdpartyJSon = new JsonObject();
@@ -379,7 +386,7 @@ public class AccidentServlet extends HttpServlet {
 	                //Add thirdpartyJSonObject with  it's properties to the thirdParty array
 	                thirdpartyArray.add(thirdpartyJSon);
                 }
-
+                accidentJSon.add("thirdparty", thirdpartyArray);
             }
             response.getWriter().println(accidentsJSon.toString());
            
@@ -459,11 +466,7 @@ public class AccidentServlet extends HttpServlet {
 						currAccident.setTowingNeeded(true);	
 					} catch (ParseException e) {
 						e.printStackTrace();
-					}
-		            
-		            
-		          
-										
+					}		            		           		          									
 					break;
 					
 				case SET_CAR_REPLACEMENT_ETA:
