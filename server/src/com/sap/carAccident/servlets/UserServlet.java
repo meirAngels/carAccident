@@ -67,7 +67,7 @@ public class UserServlet extends HttpServlet {
 					if(role.equals("driver")){
 						currentUserJson.addProperty("isDriver", true);
 					}
-					if(role == "representative"){
+					if(role.equals("representative")){
 						currentUserJson.addProperty("isRepresentative", true);
 					}
 				}
