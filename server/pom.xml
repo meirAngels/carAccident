@@ -1,0 +1,99 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!--************************************************************************** 
+		* POM SECTION: Maven Settings *************************************************************************** -->
+
+	<groupId>com.sap.angels</groupId>
+	<artifactId>com.sap.angels.car</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>${project.artifactId}</name>
+	<description>Car Accident</description>
+
+
+
+	<!--************************************************************************** 
+		* POM SECTION: Properties Settings *************************************************************************** -->
+
+	<properties>
+
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<warSourceDirectory>WebContent</warSourceDirectory>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<!-- Build timestamp for m2e build -->
+	<profiles>
+		<profile>
+
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>com.springsource.javax.persistence</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>org.eclipse.persistence.core</artifactId>
+			<version>2.6.0-M3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>com.springsource.slf4j.org.apache.commons.logging</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sap.security</groupId>
+			<artifactId>com.sap.security.auth</artifactId>
+			<version>2.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sap.security</groupId>
+			<artifactId>com.sap.security.um</artifactId>
+			<version>1.0.25</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sap.security</groupId>
+			<artifactId>com.sap.security.um.service</artifactId>
+			<version>1.0.25</version>
+		</dependency>
+
+	</dependencies>
+
+
+
+</project>

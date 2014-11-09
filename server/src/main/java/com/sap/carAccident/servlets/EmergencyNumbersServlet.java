@@ -1,7 +1,6 @@
 package com.sap.carAccident.servlets;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +27,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.sap.carAccident.persistence.EmergencyNumbers;
-import com.sap.security.core.server.csi.IXSSEncoder;
-import com.sap.security.core.server.csi.XSSEncoder;
 
 /**
  * Servlet implementation class EmergencyNumbersServlet
