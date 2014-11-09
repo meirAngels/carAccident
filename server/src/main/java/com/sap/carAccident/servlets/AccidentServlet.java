@@ -275,7 +275,7 @@ public class AccidentServlet extends HttpServlet {
 		try 
         {
 			@SuppressWarnings("unchecked")
-			List<Accident> accidentResultList = em.createNamedQuery("getAllOpenAccidents").setParameter("claimStatus", "COMPLETED").getResultList();
+			List<Accident> accidentResultList = em.createNamedQuery("getAllOpenAccidents").setParameter("claimStatus", "CLOSED").getResultList();
 			JsonObject accidentsJSon = new JsonObject();
             JsonArray accidentsArray = new JsonArray();
             accidentsJSon.add("accidents", accidentsArray);

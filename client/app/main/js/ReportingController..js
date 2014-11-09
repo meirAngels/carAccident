@@ -12,7 +12,7 @@ reportingControllers.controller('ReportingCtrl',
 
         $scope.submit = function() {
             var now = new Date();
-            var data = {accidentId : now.getTime(),
+            var data = {
                 iuserId : $scope.user.id,
                 date : now.getFullYear() + "-" + (parseInt(now.getMonth()) + 1) + "-" + now.getDate() ,
                 description : $scope.user.fname + " was crashed",

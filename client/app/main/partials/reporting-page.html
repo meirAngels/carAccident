@@ -77,6 +77,35 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="well well-sm">
+                <form class="form-horizontal" method="post">
+                    <fieldset>
+                        <legend class="text-center header">Towing Service and Car Replacement</legend>
+                        <div class="form-group">
+                            <div class="col-md-12 col-md-offset-1 inner_text text-center">
+                                Do you need a Towing Services?
+                                <input type="checkbox" ng-model="towingTruckSent" bootstrap-switch checked data-on-color="success" data-off-color="danger" on-text="YES" off-text="NO">
+                                <br/><br/>
+                                Do you need a Car Replacement?
+                                <input type="checkbox" ng-model="replacmentCarSent" bootstrap-switch checked data-on-color="success" data-off-color="danger" on-text="YES" off-text="NO">
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div>
+                <div class="panel panel-default">
+                    <div class="text-center header">Take A Picture</div>
+                    <camera>
+                        <camera-control-snapshot></camera-control-snapshot>
+                    </camera>
+                </div>
+            </div>
+        </div>
         <div class="col-md-12">
             <div class="well well-sm">
                 <form class="form-horizontal" method="post">
