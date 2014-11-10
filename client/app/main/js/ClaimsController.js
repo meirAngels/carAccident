@@ -1,11 +1,13 @@
 reportingControllers.controller('ClaimsCtrl',
-    function ($scope, $location, backendSrv) {
+    function ($scope, $location, $timeout, backendSrv) {
 
 
 
         $scope.claimsArray = []
 
         $scope.currentAccident;
+
+        $scope.saveLoader = false;
 
 
         $scope.towingneededDisabled = false;
@@ -39,6 +41,11 @@ reportingControllers.controller('ClaimsCtrl',
 
         $scope.save = function(){
 
+
+
+
+           $scope.saveLoader = true;
+
             var currentDate = new Date();
             var year = currentDate.getFullYear();
             var day = currentDate.getDate();
@@ -65,10 +72,20 @@ reportingControllers.controller('ClaimsCtrl',
 
             backendSrv.saveOpenClaim($scope.currentAccident.accidentId, towingETA, carReplacementETA, $scope.currentAccident.claimSentToInsurance, $scope.currentAccident.claimStatus)
                 .then(function(data, status, headers, config){
-                    var test=4;
+
+                    $timeout(function(){  $scope.$apply(function() {
+                            $scope.saveLoader = false;
+                        }
+                    )}, 1000);
+
+
+
                 })
                 .fail(function(){
-                    var test=4;
+                    $timeout(function(){  $scope.$apply(function() {
+                            $scope.saveLoader = false;
+                        }
+                    )}, 1000);
                 })
 
 
