@@ -1,13 +1,30 @@
 reportingControllers.controller('ReportingCtrl',
-    function ($scope, backendSrv) {
+    function ($scope, backendSrv , userSrv) {
 
         //data
         $scope.injuried = false;
-        $scope.user = {id: "123" , fname : "Meir" , lname : "Rotstein" , email : "meir.rotstein@sap.com" , phone : "054-7488557" , confirmed : true};
 
         //ui bindings
         $scope.submitSucceded = false;
         $scope.submitFalied = false;
+
+        $scope.$on('$routeChangeSuccess', function (event) {
+            userSrv.whoAmI().then(
+                function(data){
+                    $scope.$apply(function() {
+                            $scope.user = {
+                                    fname : data.firstname,
+                                    lname : data.lastname,
+                                    email : data.email,
+                                    phone : "054-7488557",
+                                    confirmed : true
+                            }
+                        }
+                    );
+
+                }
+            );
+        });
 
 
         $scope.submit = function() {

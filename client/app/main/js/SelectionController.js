@@ -1,8 +1,8 @@
 reportingControllers.controller('SelectionCtrl',
-    function ($scope,  $location, backendSrv) {
+    function ($scope,  $location, backendSrv , userSrv) {
 
         $scope.showReportAccident = true;
-        $scope.showHandleOpenClaims = true;
+        $scope.showHandleOpenClaims = false;
         $scope.showFollowUpOnCaseProgress = true;
 
         $scope.$on("roleForSelection", function(event, role) {
@@ -21,5 +21,17 @@ reportingControllers.controller('SelectionCtrl',
         $scope.followUpOnCaseProgress = function(){
             $location.path("/")
         }
+
+        $scope.$on('$routeChangeSuccess', function (event) {
+            userSrv.whoAmI().then(
+                function(data){
+                    $scope.$apply(function() {
+                            $scope.showHandleOpenClaims = data.isRepresentative;
+                        }
+                    );
+
+                }
+            );
+        });
     }
 );
