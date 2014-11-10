@@ -23,6 +23,7 @@ reportingControllers.controller('SelectionCtrl',
         }
 
         $scope.$on('$routeChangeSuccess', function (event) {
+            $scope.showHandleOpenClaims = true;
             userSrv.whoAmI().then(
                 function(data){
                     $scope.$apply(function() {

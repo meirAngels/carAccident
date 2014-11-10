@@ -6,11 +6,11 @@ var reportingApp = angular.module('reportingApp', [
 reportingApp.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.
-            when('/', {
+            /*when('/', {
                 templateUrl: 'partials/login-page.html',
                 controller: 'LoginCtrl'
-            }).
-            when('/selection', {
+            }).*/
+            when('/', {
                 templateUrl: 'partials/selection-page.html',
                 controller: 'SelectionCtrl'
             }).

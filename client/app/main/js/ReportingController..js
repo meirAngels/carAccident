@@ -30,9 +30,9 @@ reportingControllers.controller('ReportingCtrl',
         $scope.submit = function() {
             var now = new Date();
             var data = {
-                iuserId : $scope.user.id,
+                /*iuserId : $scope.user.id,*/
                 date : now.getFullYear() + "-" + (parseInt(now.getMonth()) + 1) + "-" + now.getDate() ,
-                description : $scope.user.fname + " was crashed",
+               /* description : $scope.user.fname + " was crashed",*/
                 geolocation : $scope.gmaplocation.latitude + " N," + $scope.gmaplocation.longitude + " E",
                 damage : [],
                 towingneeded : true,
